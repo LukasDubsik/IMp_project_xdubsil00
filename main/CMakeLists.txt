@@ -1,7 +1,7 @@
 idf_component_register(
   SRCS "main.c"
   INCLUDE_DIRS "."
-  REQUIRES spiffs fatfs wear_levelling vfs sdmmc driver
+  REQUIRES esp_rom spiffs fatfs wear_levelling vfs sdmmc driver esp_timer
 )
 
 # Your strict flags…
