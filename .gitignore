@@ -3,6 +3,7 @@ token.txt
 
 #To help jkeep the repo tiny and managable
 build/
+managed_components/
 sdkconfig
 sdkconfig.old
 .vscode/
