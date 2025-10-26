@@ -1,1 +1,9 @@
+#For github token - do not commit, stored locally for push
 token.txt
+
+#To help jkeep the repo tiny and managable
+build/
+sdkconfig
+sdkconfig.old
+.vscode/
+*.log
