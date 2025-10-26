@@ -8,3 +8,4 @@ sdkconfig
 sdkconfig.old
 .vscode/
 *.log
+.clang_tidy
