@@ -4,11 +4,14 @@ idf_component_register(
   REQUIRES spiffs fatfs wear_levelling vfs sdmmc driver
 )
 
-# Add strict warnings only for *your* component
+# Your strict flags…
 target_compile_options(${COMPONENT_LIB} PRIVATE
   -Wall -Wextra -Werror
   -Wconversion -Wsign-conversion
   -Wdouble-promotion
-  -Wshadow -Wformat=2 -Wundef
+  -Wshadow -Wformat=2
   -Wstrict-prototypes -Wmissing-prototypes -Wold-style-definition
+  -Wno-undef
+  -Wno-error=undef
 )
+
