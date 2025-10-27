@@ -140,7 +140,7 @@ char wait_for_press(char* valid){
             return pressed;
         }
         //Otherwise inform user that wrong key was selected
-        else{
+        else if (pressed != '\0'){
             blink_error(2);
         }
         //Wait some time before the next scan
