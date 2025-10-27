@@ -28,7 +28,7 @@ void app_main(void)
     configure_keyboard();
 
     //Signal that all has been setup correctly by blinking once - for 1s
-    blink_led(1000);
+    blink_led(CORRECT_LED_TIME);
 
     //Start the infinite iteration
     while(1){
@@ -42,7 +42,8 @@ void app_main(void)
                 //By breaking out here we still remain in the loop that we will never escape
                 break;
             }
-            //Otherwise 
+            //Otherwise blink the LED to signify the input has been accepted
+            blink_led(CORRECT_LED_TIME);
         }
     }
 }
