@@ -44,6 +44,9 @@ void app_main(void)
             }
             //Otherwise blink the LED to signify the input has been accepted
             blink_led(CORRECT_LED_TIME);
+
+            //A temporary break to restart the whole system before correct code was set in
+            break;
         }
     }
 }
