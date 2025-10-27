@@ -12,22 +12,15 @@
  //User defined headers
 #include "imp.h"
 #include "periferies/matrix.h"
+#include "periferies/led.h"
 
 //System headers
-#include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/gpio.h"
 #include "esp_log.h"
-#include "hal/gpio_types.h"
-#include "sdkconfig.h"
-#include "esp_rom_sys.h"
-#include "soc/gpio_num.h"
 
 
 static const char *TAG = "example";
-
-#define BLINK_GPIO CONFIG_BLINK_GPIO
 
 void app_main(void)
 {

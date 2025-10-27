@@ -35,7 +35,8 @@ void blink_led(int on_time)
 
 void blink_error(int error_type)
 {
+    //The number of times the Led blinks signifies the error type
     for (int i=0; i < error_type; i++){
-        blink_led(on_time);
+        blink_led(ERROR_LED_TIME);
     }
 }
