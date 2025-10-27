@@ -1,5 +1,6 @@
 //User defined Includes
 #include "matrix.h"
+#include"led.h"
 #include "../imp.h"
 
 //Standard library
@@ -137,6 +138,10 @@ char wait_for_press(char* valid){
         //Check if the pressed key is restart - if so, also exit
         else if (pressed == RESTART_KEY){
             return pressed;
+        }
+        //Otherwise inform user that wrong key was selected
+        else{
+            blink_error(2);
         }
         //Wait some time before the next scan
         vTaskDelay(pdMS_TO_TICKS(5));

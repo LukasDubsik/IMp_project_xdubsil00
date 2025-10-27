@@ -17,6 +17,12 @@
  */
 #define CORRECT_LED_TIME 1000
 
+/**
+ * @def INCORRECT_KEY_TYPED
+ * @brief Number of times the LED should flash when incorrect key was typed.
+ */
+#define INCORRECT_KEY_TYPED 2
+
 
 /* PROTOTYPES */
 /**
