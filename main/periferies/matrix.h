@@ -9,6 +9,11 @@
  *        Waits 20 ms.
  */
 #define DEBOUNCE 20000
+/**
+ * @def RT_KEY
+ * @brief Key that when pressed restarts the whole program - moves to the start;
+ */
+#define RESTART_KEY '6'
 
 
 /* PROTOTYPES */
@@ -28,3 +33,12 @@ void configure_keyboard(void);
  * @return Returns the pressed character on the keyboard if any key is down. Otherwise returns '\0'
  */
 char scan_keyboard(void);
+
+/**
+ * @brief Wait until a permisible key is pressed, then pass that pressed key.
+ *
+ * The result can either be the key given in the valid array or a reset key that makes the whole program start from the beginning again.
+ *
+ * @return Returns the pressed key on the matrix.
+ */
+char wait_for_press(char* valid);

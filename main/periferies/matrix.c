@@ -2,6 +2,9 @@
 #include "matrix.h"
 #include "../imp.h"
 
+//Standard library
+#include <string.h>
+
 //System Includes
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
@@ -121,4 +124,21 @@ char scan_keyboard(void)
 
     //When nothing was detected
     return '\0';
+}
+
+char wait_for_press(char* valid){
+    //Iterate until a valid output is given - or restart is triggered
+    while(1){
+        char pressed = scan_keyboard();
+        //Check if the pressed key is valid output - if so, return it
+        if (pressed != '\0' && strchr(valid, pressed)){
+            return pressed;
+        }
+        //Check if the pressed key is restart - if so, also exit
+        else if (pressed == RESTART_KEY){
+            return pressed;
+        }
+        //Wait some time before the next scan
+        vTaskDelay(pdMS_TO_TICKS(5));
+    }
 }

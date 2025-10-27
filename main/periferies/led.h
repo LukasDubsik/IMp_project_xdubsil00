@@ -8,9 +8,14 @@
 /* MACROS */
 /**
  * @def ERROR_LED_TIME
- * @brief The defined time the led is on for each error blink.
+ * @brief The defined time the led is on for each error blink (in ms).
  */
-#define ERROR_LED_TIME 500
+#define ERROR_LED_TIME 200
+/**
+ * @def CORRECT_LED_TIME
+ * @brief Used when something passes to inform the user.
+ */
+#define CORRECT_LED_TIME 1000
 
 
 /* PROTOTYPES */
