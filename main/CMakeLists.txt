@@ -1,5 +1,5 @@
 idf_component_register(
-  SRCS "main.c"
+  SRCS "main.c" "periferies/matrix.c"
   INCLUDE_DIRS "."
   REQUIRES esp_rom spiffs fatfs wear_levelling vfs sdmmc driver esp_timer
 )
