@@ -40,7 +40,7 @@ void uart_send_prompt(const char *current_folder)
     //Then write the current folder
     uart_write_bytes(UART_PORT, current_folder, strlen(current_folder));
     //Then write the '$ ' - inspired by ubuntu
-    uart_write_bytes(UART_PORT, "$ ", 2);
+    uart_write_bytes(UART_PORT, " $ ", 3);
     //Then write the newline char
     uart_newline();
 }

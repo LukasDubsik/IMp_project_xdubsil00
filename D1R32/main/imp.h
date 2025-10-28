@@ -25,7 +25,7 @@
  * @def SYSTEM_INTRO
  * @brief The example of a possible device name for this project.
  */
-#define SYSTEM_INTRO "IMP:file_system@"
+#define SYSTEM_INTRO "IMP@file_system:"
 /**
  * @def SYSTEM_INTRO_LEN
  * @brief Just length of the SYSTEM_INTRO macro

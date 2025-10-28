@@ -84,9 +84,11 @@ void app_main(void)
                 uart_send_data("Communication from PI not working!");
                 //Flash based on error type
                 if (ini_contact ==  UART_READ_BUFFER_OVERFLOW){
+                    ESP_LOGI(TAG, "OVERFLOW!");
                     blink_error(LED_BUFFER_READ_OVERFLOW);
                 }
-                else if (ini_contact == LED_READ_TIMEOUT){
+                else if (ini_contact == UART_READ_TIMEOUT){
+                    ESP_LOGI(TAG, "TIMEOUT!");
                     blink_error(LED_READ_TIMEOUT);
                 }
                 //break the loop and start again
@@ -96,7 +98,7 @@ void app_main(void)
             ESP_LOGI(TAG, "Pressed the key: %c!", rx_buffer[0]);
             //Then check what the message was - expecting just !
             if (rx_buffer[0] != '!'){
-                ESP_LOGI(TAG, "HERE!");
+                ESP_LOGI(TAG, "INCORRECT RETURN!");
                 blink_error(LED_UNEXPECTED_MESSAGE);
                 break;
             }
