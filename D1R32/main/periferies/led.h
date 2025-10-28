@@ -37,6 +37,11 @@
  * @brief Number of times the LED should flash when timeout occured during uart read.
  */
 #define LED_READ_TIMEOUT 5
+/**
+ * @def LED_UNEXPECTED_MESSAGE
+ * @brief Number of times the LED should flash when unexpected data are recived.
+ */
+#define LED_UNEXPECTED_MESSAGE 3
 
 
 /* PROTOTYPES */

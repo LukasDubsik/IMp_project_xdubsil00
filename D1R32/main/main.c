@@ -32,13 +32,14 @@ void app_main(void)
     /* 1) Run configuration on peripherals that will be used */
     setup_hardware();
 
-    //Signal that all has been setup correctly by blinking once - for 1s
-    blink_led(CORRECT_LED_TIME);
-
     //Start the infinite iteration
     while(1){
         //Start the singular session iteration
         while(1){
+            //At the start of each cycle blink two long led flashes to signal start of new cycle - in case of errors 
+            blink_led(CORRECT_LED_TIME);
+            blink_led(CORRECT_LED_TIME);
+
             //Reset the values
             current_dir = "/"; //Always start in the same directory - the root
 
@@ -76,13 +77,27 @@ void app_main(void)
             //Set a waiting time
             int64_t limit = esp_timer_get_time() + WAIT_FOR_PI;
             //Iterate until the time limit runs out
-            bool ini_contact = uart_read(rx_buffer, true, limit);
+            char ini_contact = uart_read(rx_buffer, true, limit);
             //Check if the message was received
             if (ini_contact != UART_READ_PASSED){
                 //Just try to send message once again - not guaranteed to pass but just try
                 uart_send_data("Communication from PI not working!");
-                //Flash fice times to indicate end of communication due to an error
+                //Flash based on error type
+                if (ini_contact ==  UART_READ_BUFFER_OVERFLOW){
+                    blink_error(LED_BUFFER_READ_OVERFLOW);
+                }
+                else if (ini_contact == LED_READ_TIMEOUT){
+                    blink_error(LED_READ_TIMEOUT);
+                }
+                //break the loop and start again
+                break;
             }
+            //Then check what the message was - expecting just !
+            if (rx_buffer[0] != '!'){
+                blink_error(LED_UNEXPECTED_MESSAGE);
+                break;
+            }
+            //Now that this is setup we can finally start fully coimmunicating
 
 
             //A temporary break to restart the whole system before correct code was set in
