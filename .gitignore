@@ -1,11 +1,12 @@
 #For github token - do not commit, stored locally for push
-token.txt
+D1R32/token.txt
 
 #To help jkeep the repo tiny and managable
-build/
-managed_components/
-sdkconfig
-sdkconfig.old
-.vscode/
-*.log
-.clang_tidy
+D1R32/build/
+D1R32/.cache
+D1R32/managed_components/
+D1R32/sdkconfig
+D1R32/sdkconfig.old
+D1R32/.vscode/
+D1R32/*.log
+D1R32/.clang_tidy

@@ -1,8 +1,0 @@
-version: "0.1.0"
-description: "Componenets and dependencies for the IMP project for file system testing"
-targets:
-  - esp32
-
-dependencies:
-  idf: ">=5.0"
-  espressif/led_strip: "^3.0.0"
