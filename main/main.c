@@ -52,10 +52,14 @@ void app_main(void)
             }
 
 
-            /* 5.1) Send the message to the PI4 via UART */
+            /* 5) operate based on teh selected type */
             //TODO
 
-            /* 5.2) Wait for response - signaling all is running correctly on its end */
+
+            /* 6.1) Send the message to the PI4 via UART */
+            //TODO
+
+            /* 6.2) Wait for response - signaling all is running correctly on its end */
             //TODO
 
 
