@@ -17,7 +17,7 @@
 //System headers
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "periferies/uart.h"
+#include "esp_timer.h"
 
 
 void app_main(void)
@@ -59,10 +59,17 @@ void app_main(void)
 
 
             /* 6.1) Send the message to the PI4 via UART */
-            uart_send_data("Listen?");
+            //This message doesn't have to have any meaning (no encryption excetra) 
+            //We are just sending it to see if the PI is up and running
+            uart_send_data("?");
 
             /* 6.2) Wait for response - signaling all is running correctly on its end */
-            //TODO
+            //Set a waiting time
+            int64_t limit = esp_timer_get_time() + ;
+            //Iterate until the time limit runs out
+            while(1){
+
+            }
 
 
             //A temporary break to restart the whole system before correct code was set in

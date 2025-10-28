@@ -31,6 +31,11 @@
  * @brief Just length of the SYSTEM_INTRO macro
  */
 #define SYSTEM_INTRO_LEN strlen(SYSTEM_INTRO)
+/**
+ * @def WAIT_FOR_PI
+ * @brief How long to keep waiting for the pi to send message back (in ms)
+ */
+#define WAIT_FOR_PI 1000
 
 
 /* PROTOTYPES */
