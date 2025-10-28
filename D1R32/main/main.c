@@ -73,7 +73,7 @@ void app_main(void)
             int64_t limit = esp_timer_get_time() + WAIT_FOR_PI;
             //Iterate until the time limit runs out
             while(limit < esp_timer_get_time()){
-
+                
             }
 
 
