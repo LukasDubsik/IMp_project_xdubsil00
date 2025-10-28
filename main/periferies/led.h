@@ -10,7 +10,12 @@
  * @def ERROR_LED_TIME
  * @brief The defined time the led is on for each error blink (in ms).
  */
-#define ERROR_LED_TIME 200
+#define ERROR_LED_TIME 100
+/**
+ * @def ERROR_REST_TIME
+ * @brief How lomng should the led rest between error blinks (in ms).
+ */
+#define ERROR_REST_TIME 200
 /**
  * @def CORRECT_LED_TIME
  * @brief Used when something passes to inform the user.

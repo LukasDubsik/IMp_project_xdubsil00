@@ -38,5 +38,6 @@ void blink_error(int error_type)
     //The number of times the Led blinks signifies the error type
     for (int i=0; i < error_type; i++){
         blink_led(ERROR_LED_TIME);
+        vTaskDelay(pdMS_TO_TICKS(ERROR_REST_TIME));
     }
 }
