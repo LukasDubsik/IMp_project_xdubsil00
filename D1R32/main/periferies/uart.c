@@ -5,7 +5,6 @@
 #include "driver/uart.h"
 #include "hal/uart_types.h"
 #include "imp.h"
-#include <string.h>
 
 void configure_uart(void)
 {

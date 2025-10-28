@@ -4,6 +4,9 @@
 //System Includes
 #include "soc/gpio_num.h"
 
+//Atandart Includes
+#include <stdbool.h>
+
 
 /* MACROS */
 /**
@@ -59,3 +62,11 @@ void uart_send_prompt(const char *current_folder);
  * @param data The data to be sent through.
  */
 void uart_send_data(const char *data);
+/**
+ * @brief Read the message from the UARt receiver array.
+ *
+ * @param read Array into which the message will be saved - assumed to be zerod
+ *
+ * @return True if th message was correctly received, False if overflow.
+ */
+bool read_uart(char *read);
