@@ -4,6 +4,7 @@
 //System Includes
 #include "driver/uart.h"
 #include "hal/uart_types.h"
+#include "imp.h"
 
 void configure_uart(void)
 {
@@ -23,4 +24,28 @@ void configure_uart(void)
     //Set the buffer sizes - the send is larger as we are sending the whole file system
     //The recive can be smaller, we are just receiving commands
     ESP_ERROR_CHECK(uart_driver_install(UART_PORT, 1024, 2048, 0, NULL, 0));
+}
+
+void uart_newline(){
+    //String for more safer transfer
+    const char nl[2] = "\n";
+    uart_write_bytes(UART_PORT, nl, 1);
+}
+
+void uart_send_prompt(const char *current_folder)
+{
+    //Write the base system prompt
+    uart_write_bytes(UART_PORT, SYSTEM_INTRO, SYSTEM_INTRO_LEN);
+    //Then write the current folder
+    uart_write_bytes(UART_PORT, current_folder, strlen(current_folder));
+    //Then write the newline char
+    uart_newline();
+}
+
+void uart_send_line(const char *data)
+{
+    //Write the given data
+    uart_write_bytes(UART_PORT, data, strlen(data));
+    //Then a newline
+    uart_newline();
 }

@@ -2,6 +2,7 @@
 
 /* INCLUDES */
 #include <stdbool.h>
+#include <string.h>
 
 
 /* MACROS */
@@ -20,6 +21,8 @@
  * @brief Name used for debugging messages that can be monitored in runtime.
  */
 #define TAG "IMP-xdubsil00"
+#define SYSTEM_INTRO "IMP:file_system@"
+#define SYSTEM_INTRO_LEN strlen(SYSTEM_INTRO)
 
 
 /* PROTOTYPES */
