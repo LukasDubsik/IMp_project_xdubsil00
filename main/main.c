@@ -38,7 +38,9 @@ void app_main(void)
                 break;
             }
 
+
             /* 3) Setup the file system based on the selected mode */
+            //TODO
 
 
             /* 4) Select the type of the operation (A, B) */
@@ -48,6 +50,14 @@ void app_main(void)
             if (restart){
                 break;
             }
+
+
+            /* 5.1) Send the message to the PI4 via UART */
+            //TODO
+
+            /* 5.2) Wait for response - signaling all is running correctly on its end */
+            //TODO
+
 
             //A temporary break to restart the whole system before correct code was set in
             break;
