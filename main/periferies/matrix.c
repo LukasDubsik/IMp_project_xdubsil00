@@ -17,9 +17,9 @@
 
 /* LOCAL VARIABLES */
 //Maps where the pins are for rows
-static gpio_num_t ROW_PINS[4] = { GPIO_NUM_13, GPIO_NUM_12, GPIO_NUM_14, GPIO_NUM_27 };
+static gpio_num_t ROW_PINS[2] = { GPIO_NUM_25, GPIO_NUM_26 };
 //Maps where the pins are for the columns - Due to viable pins and hraware limitation only first two rows will be assigned
-static gpio_num_t COLUMN_PINS[4] = { GPIO_NUM_25, GPIO_NUM_26 };
+static gpio_num_t COLUMN_PINS[4] = { GPIO_NUM_13, GPIO_NUM_12, GPIO_NUM_14, GPIO_NUM_27 };
 
 //Current state of the button - Zero meaning up, 1 down
 static uint8_t  active_state[4][4] = {0};
@@ -47,13 +47,13 @@ void configure_keyboard(void)
     };
 
     //Set the pin mask to one for the specified pins
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 2; ++i) {
         rows.pin_bit_mask |= (1ULL << ROW_PINS[i]);
     }
     //Configure the selected pins based on my mask settings
     ESP_ERROR_CHECK(gpio_config(&rows));
     //Set their outputs to HIGH on all
-    for (int j = 0; j < 4; ++j) {
+    for (int j = 0; j < 2; ++j) {
         gpio_set_level(ROW_PINS[j], HIGH);
     }
 
@@ -78,14 +78,14 @@ void configure_keyboard(void)
 char scan_keyboard(void)
 {
     //Iterate through all rows, drive low for a second and scan the columns
-    for (int row = 0; row < 4; ++row) {
+    for (int row = 0; row < 2; ++row) {
         //Set to ground
         gpio_set_level(ROW_PINS[row], LOW);
         //Pause the current task for some time - no interrupt
         esp_rom_delay_us(3);
 
         //Now scan for each column - which is held as input
-        for (int column = 0; column < 2; ++column) {
+        for (int column = 0; column < 4; ++column) {
             //Get the set level of that pin
             int level = gpio_get_level(COLUMN_PINS[column]);
             //If it is pressed - based on the matrix keypad structure
@@ -141,7 +141,7 @@ char wait_for_press(char* valid){
         }
         //Otherwise inform user that wrong key was selected
         else if (pressed != '\0'){
-            blink_error(2);
+            blink_error(INCORRECT_KEY_TYPED);
         }
         //Wait some time before the next scan
         vTaskDelay(pdMS_TO_TICKS(5));
