@@ -11,13 +11,11 @@
 
  //User defined headers
 #include "imp.h"
-#include "periferies/matrix.h"
 #include "periferies/led.h"
 
 //System headers
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_log.h"
 
 
 void app_main(void)
