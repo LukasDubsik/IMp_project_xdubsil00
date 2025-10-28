@@ -1,0 +1,51 @@
+#pragma once
+
+/* INCLUDES */
+//System Includes
+#include "soc/gpio_num.h"
+
+
+/* MACROS */
+/**
+ * @def UART_PORT
+ * @brief What UART port will be used.
+ */
+#define UART_PORT UART_NUM_2
+/**
+ * @def UART_TX
+ * @brief GPIO port through to which send the data
+ */
+#define UART_TX GPIO_NUM_17
+/**
+ * @def UART_RX
+ * @brief GPIO pin through which to receive the data
+ */
+#define UART_RX GPIO_NUM_16
+/**
+ * @def UART_BAUD
+ * @brief The BAUD rate (taken from recommended values).
+ */
+#define UART_BAUD 115200
+
+
+/* PROTOTYPES */
+/**
+ * @brief Setup the uart assymetric communication.
+ */
+void configure_uart(void);
+/**
+ * @brief Send a newline through the uart communication
+ */
+void uart_newline(void);
+/**
+ * @brief print the prompt as is typical in console for fole systems
+ *
+ * @param currrent_folder The current folder to be printed
+ */
+void uart_send_prompt(const char *current_folder);
+/**
+ * @brief Print given data through the uart communication
+ *
+ * @param data The data to be sent through.
+ */
+void uart_send_data(const char *data);
