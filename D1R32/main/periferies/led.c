@@ -10,6 +10,7 @@
 #include "hal/gpio_types.h"
 #include "soc/gpio_num.h"
 
+
 void configure_led(void)
 {
     gpio_reset_pin(GPIO_NUM_2);
