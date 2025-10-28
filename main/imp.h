@@ -1,6 +1,7 @@
 #pragma once
 
 /* INCLUDES */
+#include <stdbool.h>
 
 
 /* MACROS */
@@ -22,4 +23,16 @@
 
 
 /* PROTOTYPES */
+/**
+ * @brief The central function of the project which starts the hardware and everything.
+ */
 void app_main(void);
+/**
+ * @brief Waits until restart or key in valid pressed, then returns it.
+ *
+ * @param valid The array of chars that can be accepted when pressed.
+ * @param returned Pointer to the received character.
+ *
+ * @return Returns false if restart key was pressed or true if valid input received.
+ */
+bool scan_for_selection(char *valid, char *returned);

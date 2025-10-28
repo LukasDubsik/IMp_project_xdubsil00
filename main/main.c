@@ -41,6 +41,22 @@ void app_main(void)
             ESP_LOGI(TAG, "Pressed the key: %c!", key);
             //If we have gotten the RESTART back
             if (key == RESTART_KEY){
+                //Meaning that restart was triggered
+                blink_error(3);
+                //By breaking out here we still remain in the loop that we will never escape
+                break;
+            }
+            //Otherwise blink the LED to signify the input has been accepted
+            blink_led(CORRECT_LED_TIME);
+
+
+            /* 2) Select the type of the operation (A, B) */
+            valid = "AB";
+            key = wait_for_press(valid);
+            ESP_LOGI(TAG, "Pressed the key: %c!", key);
+            //If we have gotten the RESTART back
+            if (key == RESTART_KEY){
+                //Meaning that restart was triggered
                 blink_error(3);
                 //By breaking out here we still remain in the loop that we will never escape
                 break;
