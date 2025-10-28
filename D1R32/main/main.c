@@ -19,11 +19,15 @@
 #include "freertos/task.h"
 #include "esp_timer.h"
 
+//Standart header
+#include <stdbool.h>
+
 
 void app_main(void)
 {
     /* 0) Declare and define the values that will present thorought */
-    char *current_dir;
+    char *current_dir;          //The directory of the file system we are creating and in whivch we currently are in
+    char rx_buffer[RX_BUFFER] = {0};
 
     /* 1) Run configuration on peripherals that will be used */
     setup_hardware();
@@ -72,8 +76,12 @@ void app_main(void)
             //Set a waiting time
             int64_t limit = esp_timer_get_time() + WAIT_FOR_PI;
             //Iterate until the time limit runs out
-            while(limit > esp_timer_get_time()){
-
+            bool ini_contact = uart_read(rx_buffer, true, limit);
+            //Check if the message was received
+            if (ini_contact != UART_READ_PASSED){
+                //Just try to send message once again - not guaranteed to pass but just try
+                uart_send_data("Communication from PI not working!");
+                //Flash fice times to indicate end of communication due to an error
             }
 
 

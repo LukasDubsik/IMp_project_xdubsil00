@@ -1,10 +1,11 @@
 //User defined Includes
 #include "uart.h"
+#include "../imp.h"
 
 //System Includes
 #include "driver/uart.h"
 #include "hal/uart_types.h"
-#include "imp.h"
+#include "esp_timer.h"
 
 void configure_uart(void)
 {
@@ -52,11 +53,19 @@ void uart_send_data(const char *data)
     uart_newline();
 }
 
-bool read_uart(char *read){
+char uart_read(char *read, bool use_timeout, int64_t time_until){
+    //Set the buffer to all zeros
+    memset(read, 0, RX_BUFFER);
     //Define the current position in the buffer
     int pos = 0;
     //Read all that is present in the buffer
     while(1){
+        //If timeout enabled, check if we should end the wait
+        if (use_timeout){
+            if (esp_timer_get_time() > time_until){
+                return UART_READ_TIMEOUT;
+            }
+        }
         //Pull up the maximum size of the buffer - starting at the current pos
         int n = uart_read_bytes(UART_PORT, read + pos, RX_BUFFER, pdMS_TO_TICKS(50));
         //Check that the last character is ! (that the message was read whole)
@@ -70,12 +79,12 @@ bool read_uart(char *read){
             //If the last char is '!' - whole message read
             if (last_char == '!'){
                 //Mesage correctly received
-                return true;
+                return UART_READ_PASSED;
             }
             //If the pos is now bigger than max buffer
             if (pos >= RX_BUFFER){
                 //Buffer overflow - end the program
-                return false;
+                return UART_READ_BUFFER_OVERFLOW;
             }
         }
     }

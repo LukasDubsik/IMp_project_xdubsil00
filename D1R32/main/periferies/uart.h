@@ -6,6 +6,7 @@
 
 //Atandart Includes
 #include <stdbool.h>
+#include <stdint.h>
 
 
 /* MACROS */
@@ -39,6 +40,21 @@
  * @brief Size of the sender buffer.
  */
 #define TX_BUFFER 1024
+/**
+ * @def UART_READ_PASSED
+ * @brief Error code signifying that all passed correctly and all the data was read.
+ */
+#define UART_READ_PASSED 0
+/**
+ * @def UART_READ_TIMEOUT
+ * @brief Error code signifying that timeout ocured before all data was received.
+ */
+#define UART_READ_TIMEOUT 1
+/**
+ * @def UART_READ_BUFFER_OVERFLOW
+ * @brief Error code signifying that too much data in one message and buffer overflow occured.
+ */
+#define UART_READ_BUFFER_OVERFLOW 2
 
 
 /* PROTOTYPES */
@@ -66,7 +82,9 @@ void uart_send_data(const char *data);
  * @brief Read the message from the UARt receiver array.
  *
  * @param read Array into which the message will be saved - assumed to be zerod
+ * @param use_timeout If we should set some time limit for the opeartion to complete
+ * @param time_until The time limit until we time out and exit the function unsuccesfully
  *
- * @return True if th message was correctly received, False if overflow.
+ * @return True if th message was correctly received, False if overflow or timeout.
  */
-bool read_uart(char *read);
+char uart_read(char *read, bool use_timeout, int64_t time_until);

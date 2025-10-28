@@ -26,7 +26,17 @@
  * @def INCORRECT_KEY_TYPED
  * @brief Number of times the LED should flash when incorrect key was typed.
  */
-#define INCORRECT_KEY_TYPED 2
+#define LED_INCORRECT_KEY_TYPED 2
+/**
+ * @def LED_BUFFER_READ_OVERFLOW
+ * @brief Number of times the LED should flash when buffer overflowed during uart read.
+ */
+#define LED_BUFFER_READ_OVERFLOW 4
+/**
+ * @def LED_READ_TIMEOUT
+ * @brief Number of times the LED should flash when timeout occured during uart read.
+ */
+#define LED_READ_TIMEOUT 5
 
 
 /* PROTOTYPES */

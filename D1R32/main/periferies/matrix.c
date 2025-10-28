@@ -141,7 +141,7 @@ char wait_for_press(const char* valid){
         }
         //Otherwise inform user that wrong key was selected
         else if (pressed != '\0'){
-            blink_error(INCORRECT_KEY_TYPED);
+            blink_error(LED_INCORRECT_KEY_TYPED);
         }
         //Wait some time before the next scan
         vTaskDelay(pdMS_TO_TICKS(5));
