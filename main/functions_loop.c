@@ -12,7 +12,6 @@ bool scan_for_selection(char *valid, char *returned){
     if (*returned == RESTART_KEY){
         //Meaning that restart was triggered
         blink_error(3);
-        //By breaking out here we still remain in the loop that we will never escape
         //Return false to inform about restart
         return false;
     }

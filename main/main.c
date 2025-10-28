@@ -36,33 +36,21 @@ void app_main(void)
         //Start the singular session iteration
         while(1){
             /* 2) Wait for the user to select the mode of the program (1,2,3,4) */
-            char *valid = "1234";
-            char key = wait_for_press(valid);
-            ESP_LOGI(TAG, "Pressed the key: %c!", key);
-            //If we have gotten the RESTART back
-            if (key == RESTART_KEY){
-                //Meaning that restart was triggered
-                blink_error(3);
-                //By breaking out here we still remain in the loop that we will never escape
+            char *mode = NULL;
+            bool restart = scan_for_selection("1234", mode);
+            //By breaking out here we still remain in the loop that we will never escape
+            if (restart){
                 break;
             }
-            //Otherwise blink the LED to signify the input has been accepted
-            blink_led(CORRECT_LED_TIME);
 
 
-            /* 2) Select the type of the operation (A, B) */
-            valid = "AB";
-            key = wait_for_press(valid);
-            ESP_LOGI(TAG, "Pressed the key: %c!", key);
-            //If we have gotten the RESTART back
-            if (key == RESTART_KEY){
-                //Meaning that restart was triggered
-                blink_error(3);
-                //By breaking out here we still remain in the loop that we will never escape
+            /* 3) Select the type of the operation (A, B) */
+            char *type = NULL;
+            restart = scan_for_selection("AB", type);
+            //By breaking out here we still remain in the loop that we will never escape
+            if (restart){
                 break;
             }
-            //Otherwise blink the LED to signify the input has been accepted
-            blink_led(CORRECT_LED_TIME);
 
             //A temporary break to restart the whole system before correct code was set in
             break;
