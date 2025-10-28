@@ -17,6 +17,7 @@
 //System headers
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "esp_log.h"
 
 
 void app_main(void)
@@ -37,8 +38,10 @@ void app_main(void)
             /* 2) Wait for the user to select the mode of the program (1,2,3,4) */
             char *valid = "1234";
             char key = wait_for_press(valid);
+            ESP_LOGI(TAG, "Pressed the key: %c!", key);
             //If we have gotten the RESTART back
             if (key == RESTART_KEY){
+                blink_error(3);
                 //By breaking out here we still remain in the loop that we will never escape
                 break;
             }

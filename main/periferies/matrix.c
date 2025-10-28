@@ -91,7 +91,7 @@ char scan_keyboard(void)
             //If it is pressed - based on the matrix keypad structure
             bool pressed_now = (level == LOW) ? true : false;
 
-            //get the actual time
+            //Get the actual time
             //This wholesystem is done because of key bouncing present on mechanical keyboards to not read the same input multiple times
             int64_t now = esp_timer_get_time();
             //If the state differs, something must have happened
