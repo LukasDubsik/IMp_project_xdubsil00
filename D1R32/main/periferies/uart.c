@@ -5,10 +5,11 @@
 #include "driver/uart.h"
 #include "hal/uart_types.h"
 #include "imp.h"
+#include <string.h>
 
 void configure_uart(void)
 {
-    //Set the properties of this uart
+    //Set holder of properties for the UART
     const uart_config_t cfg = {
         .baud_rate = UART_BAUD,                 //Given in header and taken as recommended value
         .data_bits = UART_DATA_8_BITS,          //Sending by chars
@@ -23,7 +24,7 @@ void configure_uart(void)
     ESP_ERROR_CHECK(uart_set_pin(UART_PORT, UART_TX, UART_RX,UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
     //Set the buffer sizes - the send is larger as we are sending the whole file system
     //The recive can be smaller, we are just receiving commands
-    ESP_ERROR_CHECK(uart_driver_install(UART_PORT, 1024, 2048, 0, NULL, 0));
+    ESP_ERROR_CHECK(uart_driver_install(UART_PORT, RX_BUFFER, TX_BUFFER, 0, NULL, 0));
 }
 
 void uart_newline(void){
@@ -50,4 +51,33 @@ void uart_send_data(const char *data)
     uart_write_bytes(UART_PORT, data, strlen(data));
     //Then a newline
     uart_newline();
+}
+
+bool read_uart(char *read){
+    //Define the current position in the buffer
+    int pos = 0;
+    //Read all that is present in the buffer
+    while(1){
+        //Pull up the maximum size of the buffer - starting at the current pos
+        int n = uart_read_bytes(UART_PORT, read + pos, RX_BUFFER, pdMS_TO_TICKS(50));
+        //Check that the last character is ! (that the message was read whole)
+        //Since only one messages always pass we don't need to worry that multiple messages may be present in the buffer
+        //If something was read
+        if (n > 0){
+            //Move teh current position
+            pos += n;
+            //Check what the last char is
+            char last_char = read[pos-1];
+            //If the last char is '!' - whole message read
+            if (last_char == '!'){
+                //Mesage correctly received
+                return true;
+            }
+            //If the pos is now bigger than max buffer
+            if (pos >= RX_BUFFER){
+                //Buffer overflow - end the program
+                return false;
+            }
+        }
+    }
 }

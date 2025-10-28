@@ -26,6 +26,16 @@
  * @brief The BAUD rate (taken from recommended values).
  */
 #define UART_BAUD 115200
+/**
+ * @def RX_BUFFER
+ * @brief Size of the receiver buffer.
+ */
+#define RX_BUFFER 2048
+/**
+ * @def UART_BAUD
+ * @brief Size of the sender buffer.
+ */
+#define TX_BUFFER 1024
 
 
 /* PROTOTYPES */
