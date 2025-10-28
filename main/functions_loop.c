@@ -4,6 +4,13 @@
 
 #include "esp_log.h"
 
+void setup_hardware(void){
+    //Configure the led - Used for informing user for small things
+    configure_led();
+    //Configure the keyboard - Used to select which mode to run the system in
+    configure_keyboard();
+}
+
 bool scan_for_selection(char *valid, char *returned){
     *returned = wait_for_press(valid);
     //Logging to test if all is received correctly - for debugging here

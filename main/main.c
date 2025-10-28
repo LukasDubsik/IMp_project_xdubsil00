@@ -23,10 +23,7 @@
 void app_main(void)
 {
     /* 1) Run configuration on peripherals that will be used */
-    //Configure the led - Used for informing user for small things
-    configure_led();
-    //Configure the keyboard - Used to select which mode to run the system in
-    configure_keyboard();
+    setup_hardware();
 
     //Signal that all has been setup correctly by blinking once - for 1s
     blink_led(CORRECT_LED_TIME);
@@ -43,8 +40,10 @@ void app_main(void)
                 break;
             }
 
+            /* 3) Setup the file system based on the selected mode */
 
-            /* 3) Select the type of the operation (A, B) */
+
+            /* 4) Select the type of the operation (A, B) */
             char *type = NULL;
             restart = scan_for_selection("AB", type);
             //By breaking out here we still remain in the loop that we will never escape

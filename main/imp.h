@@ -28,6 +28,10 @@
  */
 void app_main(void);
 /**
+ * @brief Functions that calls the setups for individual used hardwares.
+ */
+void setup_hardware(void);
+/**
  * @brief Waits until restart or key in valid pressed, then returns it.
  *
  * @param valid The array of chars that can be accepted when pressed.
