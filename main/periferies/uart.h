@@ -33,3 +33,19 @@
  * @brief Setup the uart assymetric communication.
  */
 void configure_uart(void);
+/**
+ * @brief Send a newline through the uart communication
+ */
+void uart_newline(void);
+/**
+ * @brief print the prompt as is typical in console for fole systems
+ *
+ * @param currrent_folder The current folder to be printed
+ */
+void uart_send_prompt(const char *current_folder);
+/**
+ * @brief Print given data through the uart communication
+ *
+ * @param data The data to be sent through.
+ */
+void uart_send_line(const char *data);
