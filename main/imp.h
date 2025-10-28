@@ -21,7 +21,15 @@
  * @brief Name used for debugging messages that can be monitored in runtime.
  */
 #define TAG "IMP-xdubsil00"
+/**
+ * @def SYSTEM_INTRO
+ * @brief The example of a possible device name for this project.
+ */
 #define SYSTEM_INTRO "IMP:file_system@"
+/**
+ * @def SYSTEM_INTRO_LEN
+ * @brief Just length of the SYSTEM_INTRO macro
+ */
 #define SYSTEM_INTRO_LEN strlen(SYSTEM_INTRO)
 
 

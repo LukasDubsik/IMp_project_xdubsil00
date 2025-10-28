@@ -26,7 +26,7 @@ void configure_uart(void)
     ESP_ERROR_CHECK(uart_driver_install(UART_PORT, 1024, 2048, 0, NULL, 0));
 }
 
-void uart_newline(){
+void uart_newline(void){
     //String for more safer transfer
     const char nl[2] = "\n";
     uart_write_bytes(UART_PORT, nl, 1);
