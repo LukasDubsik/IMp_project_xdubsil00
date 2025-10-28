@@ -22,6 +22,9 @@
 
 void app_main(void)
 {
+    /* 0) Declare and define the values that will present thorought */
+    char *current_dir;
+
     /* 1) Run configuration on peripherals that will be used */
     setup_hardware();
 
@@ -32,6 +35,9 @@ void app_main(void)
     while(1){
         //Start the singular session iteration
         while(1){
+            //Reset the values
+            current_dir = "/"; //Always start in the same directory - the root
+
             /* 2) Wait for the user to select the mode of the program (1,2,3,4) */
             char mode = '\0';
             bool restart = scan_for_selection("1234", &mode);
@@ -59,15 +65,14 @@ void app_main(void)
 
 
             /* 6.1) Send the message to the PI4 via UART */
-            //This message doesn't have to have any meaning (no encryption excetra) 
-            //We are just sending it to see if the PI is up and running
-            uart_send_data("?");
+            //The first message is the prompt, which will be printed on the PI and boot the file system
+            uart_send_prompt(current_dir);
 
             /* 6.2) Wait for response - signaling all is running correctly on its end */
             //Set a waiting time
-            int64_t limit = esp_timer_get_time() + ;
+            int64_t limit = esp_timer_get_time() + WAIT_FOR_PI;
             //Iterate until the time limit runs out
-            while(1){
+            while(limit < esp_timer_get_time()){
 
             }
 

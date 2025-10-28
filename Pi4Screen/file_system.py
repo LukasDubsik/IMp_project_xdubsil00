@@ -4,12 +4,22 @@ import serial
 #Set the serial communication - baud agreed upon beforehand
 ser = serial.Serial('/dev/serial0', 115200, timeout=1)
 
-#Start the program and print the values
-print("Starting the Console for the IMP project...")
-
-#Infinitely listen to the D1R32 processing outputs
+#Wait for the D1R32 to send the initiation sequence
+print("Waiting for D1R32 to start the communication...")
 while True:
     line = ser.readline().decode(errors='ignore').strip()
+    #If there is an input - Anything is accepted
+    #But it will be the initial header for the file system
     if line:
-        print(f"KEY: {line}")
+        #Send message acknowledging the presence of the PI
+        ser.write("!\n")
+        #Then flush it, so no data are left out
+        ser.flush()
+        print("Communication established ;). Booting the filesystem now...")
+        #print the first message - header of the filesystem
+        print(line)
+        #And exit the loop
+        break
+
+#Wait for the user to print to the console
 
