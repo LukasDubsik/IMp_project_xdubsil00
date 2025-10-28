@@ -30,6 +30,6 @@
 
 /* PROTOTYPES */
 /**
- * @brief Setup teh uart for communication with the PI4 chip.
+ * @brief Setup the uart assymetric communication.
  */
 void configure_uart(void);

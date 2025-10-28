@@ -11,6 +11,7 @@ void setup_hardware(void){
     configure_led();
     //Configure the keyboard - Used to select which mode to run the system in
     configure_keyboard();
+    //Configure the UART communication for sending/receiving with the PI4
 }
 
 bool scan_for_selection(char *valid, char *returned){
