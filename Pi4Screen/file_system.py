@@ -12,7 +12,7 @@ while True:
     #But it will be the initial header for the file system
     if line:
         #Send message acknowledging the presence of the PI
-        ser.write("!\n")
+        ser.write(b'!')
         #Then flush it, so no data are left out
         ser.flush()
         print("Communication established ;). Booting the filesystem now...")

@@ -18,6 +18,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_timer.h"
+#include "esp_log.h"
 
 //Standart header
 #include <stdbool.h>
@@ -36,8 +37,7 @@ void app_main(void)
     while(1){
         //Start the singular session iteration
         while(1){
-            //At the start of each cycle blink two long led flashes to signal start of new cycle - in case of errors 
-            blink_led(CORRECT_LED_TIME);
+            //At the start of each cycle blink long led flashe to signal start of new cycle - in case of errors 
             blink_led(CORRECT_LED_TIME);
 
             //Reset the values
@@ -92,12 +92,32 @@ void app_main(void)
                 //break the loop and start again
                 break;
             }
+            //The char read
+            ESP_LOGI(TAG, "Pressed the key: %c!", rx_buffer[0]);
             //Then check what the message was - expecting just !
             if (rx_buffer[0] != '!'){
+                ESP_LOGI(TAG, "HERE!");
                 blink_error(LED_UNEXPECTED_MESSAGE);
                 break;
             }
             //Now that this is setup we can finally start fully coimmunicating
+        
+
+            /* 7.1) Wait for the input from the PI4 (user command) */
+            //TODO
+
+            /* 7.2) Process the given command */
+            //TODO
+
+            /* 7.3) Send the result to the PI4 to be visualized */
+            //TODO
+
+            /* 7.4) Retrun back to the 7.1 */
+            //TODO
+
+
+            /* 8) Once here the system has ended its run - restart to the start */
+            //TODO
 
 
             //A temporary break to restart the whole system before correct code was set in
