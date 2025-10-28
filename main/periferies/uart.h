@@ -2,7 +2,7 @@
 
 /* INCLUDES */
 //System Includes
-#include "driver/gpio.h"
+#include "soc/gpio_num.h"
 
 
 /* MACROS */

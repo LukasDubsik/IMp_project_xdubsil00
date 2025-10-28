@@ -127,7 +127,7 @@ char scan_keyboard(void)
     return '\0';
 }
 
-char wait_for_press(char* valid){
+char wait_for_press(const char* valid){
     //Iterate until a valid output is given - or restart is triggered
     while(1){
         char pressed = scan_keyboard();

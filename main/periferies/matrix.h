@@ -41,4 +41,4 @@ char scan_keyboard(void);
  *
  * @return Returns the pressed key on the matrix.
  */
-char wait_for_press(char* valid);
+char wait_for_press(const char* valid);

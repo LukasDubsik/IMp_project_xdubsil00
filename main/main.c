@@ -31,8 +31,8 @@ void app_main(void)
         //Start the singular session iteration
         while(1){
             /* 2) Wait for the user to select the mode of the program (1,2,3,4) */
-            char *mode = NULL;
-            bool restart = scan_for_selection("1234", mode);
+            char mode = '\0';
+            bool restart = scan_for_selection("1234", &mode);
             //By breaking out here we still remain in the loop that we will never escape
             if (restart){
                 break;
@@ -44,8 +44,8 @@ void app_main(void)
 
 
             /* 4) Select the type of the operation (A, B) */
-            char *type = NULL;
-            restart = scan_for_selection("AB", type);
+            char type = '\0';
+            restart = scan_for_selection("AB", &type);
             //By breaking out here we still remain in the loop that we will never escape
             if (restart){
                 break;

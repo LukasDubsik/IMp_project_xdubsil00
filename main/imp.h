@@ -39,4 +39,4 @@ void setup_hardware(void);
  *
  * @return Returns false if restart key was pressed or true if valid input received.
  */
-bool scan_for_selection(char *valid, char *returned);
+bool scan_for_selection(const char *valid, char *returned);
