@@ -13,6 +13,7 @@
 #include "imp.h"
 #include "periferies/led.h"
 #include "periferies/uart.h"
+#include "periferies/little_fs.h"
 
 //System headers
 #include "freertos/FreeRTOS.h"
@@ -41,7 +42,12 @@ void app_main(void)
             blink_led(CORRECT_LED_TIME);
 
             //Reset the values
-            snprintf(current_dir, MAX_DIR_EXPANSION, "/"); //Always start in the same directory - the root
+            int passed = set_new_directory_path(current_dir, "/"); //Always start in the same directory - the root
+            //While genrally it is okay if this fails - here it would brek the whole system, so exit
+            if (!passed){
+                break;
+            }
+
 
             /* 2) Wait for the user to select the mode of the program (1,2,3,4) */
             char mode = '\0';
@@ -53,6 +59,10 @@ void app_main(void)
 
 
             /* 3) Setup the file system based on the selected mode */
+            if (mode == '1'){
+                //Mount the Little FS file system and change the starting directory there
+                mount_little_fs();
+            }
             //TODO
 
 

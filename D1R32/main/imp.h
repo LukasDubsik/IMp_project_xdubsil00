@@ -70,3 +70,12 @@ bool scan_for_selection(const char *valid, char *returned);
  * @return True if new path was set correctly, false if failed - the path remains unchanged.
  */
 bool set_new_directory_path(char *dir_path, const char *new_path);
+/**
+ * @brief Append a value to the current path - also adds '/ automatically.
+ *
+ * @param dir_path String keeping the general value of the current directory.
+ * @param append value to append to the current path.
+ *
+ * @return True if new path was set correctly, false if failed - the path remains unchanged.
+ */
+bool append_path(char *dir_path, char *append);

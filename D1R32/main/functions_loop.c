@@ -3,7 +3,6 @@
 #include "periferies/matrix.h"
 #include "periferies/led.h"
 #include "periferies/uart.h"
-#include "periferies/little_fs.h"
 
 //Standart includes
 #include <stdio.h>
@@ -18,8 +17,6 @@ void setup_hardware(void){
     configure_keyboard();
     //Configure the UART communication for sending/receiving with the PI4
     configure_uart();
-    //Mount the Little FS file system and change the starting directory there
-    mount_little_fs();
 }
 
 bool scan_for_selection(const char *valid, char *returned){
