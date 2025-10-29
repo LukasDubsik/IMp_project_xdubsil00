@@ -1,7 +1,7 @@
 idf_component_register(
-  SRCS "main.c" "periferies/matrix.c" "periferies/led.c" "periferies/uart.c" "functions_loop.c"
+  SRCS "main.c" "periferies/matrix.c" "periferies/led.c" "periferies/uart.c" "periferies/little_fs.c" "functions_loop.c"
   INCLUDE_DIRS "."
-  REQUIRES esp_rom spiffs fatfs wear_levelling vfs sdmmc driver esp_timer
+  REQUIRES esp_rom spiffs fatfs wear_levelling vfs sdmmc driver esp_timer littlefs
 )
 
 # Your strict flags…
