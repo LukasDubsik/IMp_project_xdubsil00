@@ -1,8 +1,11 @@
 #pragma once
 
 /* INCLUDES */
+//User defined Includes
+#include "periferies/uart.h"
+
+//Standart Includes
 #include <stdbool.h>
-#include <string.h>
 
 
 /* MACROS */
@@ -41,6 +44,11 @@
  * @brief Maximum number of chars the current directory path can contain
  */
 #define MAX_DIR_EXPANSION 512
+/**
+ * @def MAX_MESSAGE_SIZE
+ * @brief Maximum number of chars that can be in return message - equivalent to our send buffer size minus safe constant.
+ */
+#define MAX_MESSAGE_SIZE (TX_BUFFER - 32)
 
 
 /* PROTOTYPES */

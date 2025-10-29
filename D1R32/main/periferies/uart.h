@@ -34,12 +34,12 @@
  * @def RX_BUFFER
  * @brief Size of the receiver buffer.
  */
-#define RX_BUFFER 2048
+#define RX_BUFFER 1024
 /**
  * @def UART_BAUD
  * @brief Size of the sender buffer.
  */
-#define TX_BUFFER 1024
+#define TX_BUFFER 2048
 /**
  * @def UART_READ_PASSED
  * @brief Error code signifying that all passed correctly and all the data was read.
