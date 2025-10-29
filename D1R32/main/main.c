@@ -27,7 +27,7 @@
 void app_main(void)
 {
     /* 0) Declare and define the values that will present thorought */
-    char *current_dir;          //The directory of the file system we are creating and in whivch we currently are in
+    char current_dir[MAX_DIR_EXPANSION] = {0};  //The directory of the file system we are creating and in which we currently are in
     char rx_buffer[RX_BUFFER] = {0};
 
     /* 1) Run configuration on peripherals that will be used */
@@ -41,7 +41,7 @@ void app_main(void)
             blink_led(CORRECT_LED_TIME);
 
             //Reset the values
-            current_dir = "/"; //Always start in the same directory - the root
+            snprintf(current_dir, MAX_DIR_EXPANSION, "/"); //Always start in the same directory - the root
 
             /* 2) Wait for the user to select the mode of the program (1,2,3,4) */
             char mode = '\0';

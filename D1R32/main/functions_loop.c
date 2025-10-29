@@ -5,6 +5,9 @@
 #include "periferies/uart.h"
 #include "periferies/little_fs.h"
 
+//Standart includes
+#include <stdio.h>
+
 //System Includes
 #include "esp_log.h"
 
@@ -34,4 +37,38 @@ bool scan_for_selection(const char *valid, char *returned){
     blink_led(CORRECT_LED_TIME);
     //Return given and it wasn't a restart
     return false;
+}
+
+bool set_new_directory_path(char *dir_path, const char *new_path){
+    //Temporary safe the previous content
+    char *temp = malloc(MAX_DIR_EXPANSION);
+    snprintf(temp, MAX_DIR_EXPANSION, "%s", dir_path);
+    //"Print" the new path into the old one
+    int res = snprintf(dir_path, MAX_DIR_EXPANSION, "%s", new_path);
+    //Check that the current operation occured - overflow or no write
+    if (res < 0 || (size_t)res >= MAX_DIR_EXPANSION) {
+        //Send information to the user that overflow occured and no additional cd can occur
+        uart_send_data("Overflow in directory length, returning to the previous value!");
+        //Return to the original value
+        snprintf(dir_path, MAX_DIR_EXPANSION, "%s", temp);
+        //free resources and exit
+        free(temp);
+        return false;
+    }
+    //Also free - even if not needed - and exit
+    free(temp);
+    return true;
+}
+
+bool append_path(char *dir_path, char *append){
+    //Get the position of the '\0' in the current path
+    size_t end = strlen(dir_path);
+    //Check if we will not have overflow
+    if (end + strlen(append) >= MAX_DIR_EXPANSION){
+        return false;
+    }
+    //Otherwise do the append
+    snprintf(dir_path + end, MAX_DIR_EXPANSION - end, "/%s", append);
+    //And return that all went AOK
+    return true;
 }

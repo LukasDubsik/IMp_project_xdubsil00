@@ -36,6 +36,11 @@
  * @brief How long to keep waiting for the pi to send message back (in ms)
  */
 #define WAIT_FOR_PI 1000
+/**
+ * @def MAX_DIR_EXPANSION
+ * @brief Maximum number of chars the current directory path can contain
+ */
+#define MAX_DIR_EXPANSION 512
 
 
 /* PROTOTYPES */
@@ -56,3 +61,12 @@ void setup_hardware(void);
  * @return Returns false if restart key was pressed or true if valid input received.
  */
 bool scan_for_selection(const char *valid, char *returned);
+/**
+ * @brief Set the new directory path.
+ *
+ * @param dir_path String keeping the general value of the current directory.
+ * @param new_path String containing the new path to change to.
+ *
+ * @return True if new path was set correctly, false if failed - the path remains unchanged.
+ */
+bool set_new_directory_path(char *dir_path, const char *new_path);
