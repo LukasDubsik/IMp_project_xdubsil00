@@ -28,6 +28,11 @@
  */
 #define LED_INCORRECT_KEY_TYPED 2
 /**
+ * @def LED_MOUNTING_FAILED
+ * @brief Number of times the LED should flash when mounting of the filessytem failed.
+ */
+#define LED_MOUNTING_FAILED 3
+/**
  * @def LED_BUFFER_READ_OVERFLOW
  * @brief Number of times the LED should flash when buffer overflowed during uart read.
  */
