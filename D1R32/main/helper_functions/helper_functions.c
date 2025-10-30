@@ -11,14 +11,15 @@ void trim(char *inp){
     char *start = inp;
     //Its end
     char *end = start + strlen(start);
-    //Its position - disregarding '\0'
-    size_t pos = strlen(start) - 1;
+    //Empty string
+    if (end == start) return;
 
+    end--;
     //Iterate until we reach point where there are no whitespaces
-    while (end > start && isspace(end[pos])) {
+    while (end >= start && isspace((unsigned char)*end)) {
         end--;
     }
 
     //Set the last char as end of string
-    inp[pos + 1] = '\0';
+    end[1] = '\0';
 }

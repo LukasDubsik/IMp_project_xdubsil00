@@ -10,6 +10,7 @@
  */
 
  //User defined headers
+#include "filesystem/commands.h"
 #include "imp.h"
 #include "periferies/led.h"
 #include "periferies/uart.h"
@@ -61,8 +62,11 @@ void app_main(void)
 
             /* 3) Setup the file system based on the selected mode */
             if (mode == '1'){
-                //Mount the Little FS file system and change the starting directory there
-                //mount_little_fs();
+                passed = set_new_directory_path(current_dir, LITTLE_FS_BASE_PATH); //Always start in the same directory - the root
+                //While genrally it is okay if this fails - here it would brek the whole system, so exit
+                if (!passed){
+                    break;
+            }
             }
             //TODO
 
@@ -116,17 +120,19 @@ void app_main(void)
             //Now that this is setup we can finally start fully coimmunicating
         
 
-            /* 7.1) Wait for the input from the PI4 (user command) */
-            //TODO
+            /* 7) Eternal processing of user inputs */
+            while(1){
+                /* 7.1) Wait for the input from the PI4 (user command) */
+                uart_read(rx_buffer, false, 0);
 
-            /* 7.2) Process the given command */
-            //TODO
+                blink_error(LED_UNEXPECTED_MESSAGE);
 
-            /* 7.3) Send the result to the PI4 to be visualized */
-            //TODO
+                /* 7.2) Process the given command */
+                select_command(rx_buffer, current_dir);
 
-            /* 7.4) Retrun back to the 7.1 */
-            //TODO
+                /* 7.3) Retrun back to the 7.1 */
+                blink_error(LED_UNEXPECTED_MESSAGE);
+            }
 
 
             /* 8) Once here the system has ended its run - restart to the start */

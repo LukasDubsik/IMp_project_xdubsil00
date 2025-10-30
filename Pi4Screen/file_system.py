@@ -2,14 +2,14 @@
 import serial
 import sys
 
-def wait_for_result():
+def wait_for_result() -> None:
     try:
         while True:
             data = ser.readline()
             if data:
-                #Retrun the data exactly
-                sys.stdout.write(data.decode(errors='ignore'))
-                sys.stdout.flush()
+                #Return the data exactly
+                print(data)
+                break
     except Exception as e:
         sys.stdout.write(f"\n[serial_reader stopped: {e}]\n")
 
@@ -47,6 +47,7 @@ try:
         ser.write(read_line.encode())
         ser.flush()
         #Wait for the response from the D1R32
+        wait_for_result()
 
 except:
     pass
