@@ -46,9 +46,14 @@
 #define MAX_DIR_EXPANSION 512
 /**
  * @def MAX_MESSAGE_SIZE
- * @brief Maximum number of chars that can be in return message - equivalent to our send buffer size minus safe constant.
+ * @brief Maximum number of chars that can be in message sent to PI4 - equivalent to our send buffer size minus safe constant.
  */
 #define MAX_MESSAGE_SIZE (TX_BUFFER - 32)
+/**
+ * @def MAX_RECEIVE_SIZE
+ * @brief Maximum number of chars that can be returned by PI4.
+ */
+#define MAX_RECEIVE_SIZE RX_BUFFER
 
 
 /* PROTOTYPES */
