@@ -9,9 +9,10 @@
 
 
 void select_command(char *command){
-    //Go command by available command 
+    //Strip the trailing whitespaces
+    char command_holder[MAX_RECEIVE_SIZE] = 
+    //Go command by command and see if the submitted matches to any
 }
-
 
 bool cmd_df(char *res){
     //Get information about current system configuration
