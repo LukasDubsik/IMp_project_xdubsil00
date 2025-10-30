@@ -2,6 +2,7 @@
 #include "commands.h"
 #include "../imp.h"
 #include "../periferies/little_fs.h"
+#include "../helper_functions/helper_functions.h"
 
 //System Includes
 #include "esp_littlefs.h"
@@ -10,8 +11,11 @@
 
 void select_command(char *command){
     //Strip the trailing whitespaces
-    char command_holder[MAX_RECEIVE_SIZE] = 
-    //Go command by command and see if the submitted matches to any
+    trim(command);
+    //Go command by command and see if the submitted matches to any of the recognized ones
+    if (strcmp(command, "df")){
+        //perform_command();
+    }
 }
 
 bool cmd_df(char *res){
