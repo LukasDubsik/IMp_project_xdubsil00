@@ -6,19 +6,42 @@
 
 //System Includes
 #include "esp_littlefs.h"
-#include "esp_log.h"
+#include "periferies/uart.h"
+
+//Standart Includes
+#include <string.h>
 
 
-void select_command(char *command){
+void select_command(char *command, char *curr_dir){
     //Strip the trailing whitespaces
     trim(command);
     //Go command by command and see if the submitted matches to any of the recognized ones
     if (strcmp(command, "df")){
-        //perform_command();
+        perform_command(cmd_df);
+    }
+    //Then print the command prompt
+    uart_send_prompt(curr_dir);
+}
+
+void perform_command(bool (*command)(char *, char *)){
+    //Allocate the necessary space for the possible result of the command
+    char *res = malloc(MAX_MESSAGE_SIZE);
+    //Also allocate for possible error message
+    char *err_msg = malloc(MAX_MESSAGE_SIZE);
+    //Perform the command and get if passed/failed
+    bool err = command(res, err_msg);
+    //Check if the command passed
+    if (err == false){
+        //Print to the terminal why it failed
+        uart_send_data(err_msg);
+    }
+    else{
+        //Otherwise send the results
+        uart_send_data(res);
     }
 }
 
-bool cmd_df(char *res){
+bool cmd_df(char *res, char *err){
     //Get information about current system configuration
     size_t total = 0, used = 0;
     int error = esp_littlefs_info(LITTLE_FS_PARTITION_LABEL, &total, &used);
@@ -28,5 +51,7 @@ bool cmd_df(char *res){
         snprintf(res, MAX_MESSAGE_SIZE, "LittleFS mounted at %s (%u KB total, %u KB used)", LITTLE_FS_BASE_PATH, total, used);
         return true;
     }
+    //Allocate error message
+    snprintf(err, MAX_MESSAGE_SIZE, "Couldn't get statistics about the mounted system, possible internal error.");
     return false;
 }
