@@ -1,11 +1,14 @@
 //User Includes
 #include "little_fs.h"
 #include "led.h"
+#include "../imp.h"
 
 //Systemn Includes
 #include "esp_littlefs.h"
+#include "esp_log.h"
 
 //Standart Includes
+#include <errno.h>
 #include <sys/unistd.h>
 
 
@@ -23,14 +26,6 @@ void mount_little_fs(void)
     esp_err_t error = esp_vfs_littlefs_register(&conf);
     //If the mounting failed
     if (error != ESP_OK){
-        //Blink the error code
-        blink_error(LED_MOUNTING_FAILED);
-        //Trigger full system reboot
-        abort();
-    }
-
-    //Start at this directory when starting system
-    if (chdir("/littlefs") != 0) {
         //Blink the error code
         blink_error(LED_MOUNTING_FAILED);
         //Trigger full system reboot

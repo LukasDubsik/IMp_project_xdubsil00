@@ -33,6 +33,7 @@ void app_main(void)
 
     /* 1) Run configuration on peripherals that will be used */
     setup_hardware();
+    mount_little_fs();
 
     //Start the infinite iteration
     while(1){
@@ -61,7 +62,7 @@ void app_main(void)
             /* 3) Setup the file system based on the selected mode */
             if (mode == '1'){
                 //Mount the Little FS file system and change the starting directory there
-                mount_little_fs();
+                //mount_little_fs();
             }
             //TODO
 

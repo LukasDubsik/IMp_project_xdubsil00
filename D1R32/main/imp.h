@@ -6,6 +6,7 @@
 
 //Standart Includes
 #include <stdbool.h>
+#include <string.h>
 
 
 /* MACROS */
