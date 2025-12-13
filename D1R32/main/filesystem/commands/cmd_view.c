@@ -22,7 +22,7 @@ bool cmd_cat(char *res, char *err, char *curr_dir, const char *args)
     path_join(file, sizeof(file), curr_dir, args);
 
     // Try to open (create) the file
-    FILE *f = fopen(file, "a");
+    FILE *f = fopen(file, "r");
 
     // If file not found/opened/created
     if (!f) {
@@ -43,7 +43,7 @@ bool cmd_cat(char *res, char *err, char *curr_dir, const char *args)
 bool cmd_ls(char *res, char *err, char *curr_dir, const char *args)
 {
     // Set the current directory
-    char dir[MAX_DIR_EXPANSION];
+    char dir[MAX_DIR_EXPANSION] = {0};
 
     // If no argument given: Implicitly means list curr dir
     if (!args || args[0] == '\0') {
@@ -65,10 +65,13 @@ bool cmd_ls(char *res, char *err, char *curr_dir, const char *args)
     // Value holders
     int offset = 0;
     struct dirent *list;
-    char local_path[MAX_DIR_EXPANSION];
+    char local_path[MAX_DIR_EXPANSION] = {0};
 
     // Cycle and read the files/dirs in the dir
-    while ((list = readdir(directory)) != 0) {
+    while ((list = readdir(directory)) != NULL) {
+        if (strcmp(list->d_name, ".") == 0 || strcmp(list->d_name, "..") == 0) {
+            continue;
+        }
         // Join the path to teh name
         path_join(local_path, MAX_DIR_EXPANSION, dir, list->d_name);
         
@@ -81,23 +84,28 @@ bool cmd_ls(char *res, char *err, char *curr_dir, const char *args)
         }
         char type = S_ISDIR(path_stat.st_mode) ? 'd' : 'f';
 
-        int size_free_to_allocate = 0;
         // Get the current, viable size
-        if (offset < MAX_MESSAGE_SIZE) {
-            size_free_to_allocate = MAX_MESSAGE_SIZE - offset;
-        } else {
+        int size_free_to_allocate = MAX_MESSAGE_SIZE - offset;
+        if (size_free_to_allocate <= 1) {
             // Otherwise zero space to allocate and we can't print more
-            size_free_to_allocate = 0;
+            break;
         }
 
         // print the statistics of the file/dir
-        snprintf(res + (size_t)offset, (size_t)size_free_to_allocate, 
+        int written = snprintf(res + (size_t)offset, (size_t)size_free_to_allocate, 
                  "%c %ld %s\n", type, path_stat.st_size, list->d_name);
-        
-        // Break when overreached allocated space
-        if (offset > MAX_MESSAGE_SIZE) {
+      
+        // Break if nothing written in error
+        if (written < 0) {
             break;
         }
+        // Set the new offset and values
+        if (written >= size_free_to_allocate) {
+            offset = MAX_MESSAGE_SIZE - 1;
+            res[offset] = '\0';
+            break;
+        }
+        offset += written;
     }
 
     // Close the directory
@@ -109,7 +117,7 @@ bool cmd_ls(char *res, char *err, char *curr_dir, const char *args)
 bool cmd_pwd(char *res, char *err, char *curr_dir, const char *args)
 {
     // Simply return the current directory in the message
-    snprintf(res, sizeof(res), "%s", curr_dir);
+    snprintf(res, MAX_MESSAGE_SIZE, "%s", curr_dir);
     // Can't really fail
     return true;
 }

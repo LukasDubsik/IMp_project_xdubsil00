@@ -17,7 +17,7 @@ bool cmd_mkdir(char *res, char *err, char *curr_dir, const char *args)
     }
 
     // The resulting dir
-    char dir[MAX_DIR_EXPANSION];
+    char dir[MAX_DIR_EXPANSION] = {0};
 
     // Join the current dir to the res dir
     path_join(dir, sizeof(dir), curr_dir, args);
@@ -41,7 +41,7 @@ bool cmd_rmdir(char *res, char *err, char *curr_dir, const char *args)
     }
 
     // The resulting dir
-    char dir[MAX_DIR_EXPANSION];
+    char dir[MAX_DIR_EXPANSION] = {0};
 
     // Join the current dir to the res dir
     path_join(dir, sizeof(dir), curr_dir, args);
@@ -65,7 +65,7 @@ bool cmd_touch(char *res, char *err, char *curr_dir, const char *args)
     }
 
     // The resulting dir
-    char file[MAX_DIR_EXPANSION];
+    char file[MAX_DIR_EXPANSION] = {0};
 
     // Join the current dir to the res dir
     path_join(file, sizeof(file), curr_dir, args);
@@ -92,7 +92,7 @@ bool cmd_rm(char *res, char *err, char *curr_dir, const char *args)
     }
 
     // The resulting dir
-    char file[MAX_DIR_EXPANSION];
+    char file[MAX_DIR_EXPANSION] = {0};
 
     // Join the current dir to the res dir
     path_join(file, sizeof(file), curr_dir, args);

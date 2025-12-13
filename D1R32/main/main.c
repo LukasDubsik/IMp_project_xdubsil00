@@ -139,6 +139,8 @@ void app_main(void)
 
                 /* 7.3) Check restart button wasn't pressed */
                 if (restart_pressed) {
+                    // Restart the restart
+                    restart_pressed = false;
                     // If it was pressed, inform debug
                     ESP_LOGI(TAG, "RESTART!");
                     // inform Pi4 so it can shut down

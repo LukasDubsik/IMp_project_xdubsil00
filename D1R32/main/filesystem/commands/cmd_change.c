@@ -82,7 +82,7 @@ static bool write_into_file(char *res, char *err, char *curr_dir,
     path_join(path, sizeof(path), curr_dir, file);
 
     // Try to open the file
-    FILE *f = fopen(file, mode);
+    FILE *f = fopen(path, mode);
 
     // If file not found/opened/created
     if (!f) {

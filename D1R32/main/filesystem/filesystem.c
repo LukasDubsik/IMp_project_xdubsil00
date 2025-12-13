@@ -57,7 +57,11 @@ void select_command(char *command, char *curr_dir){
     } else if (strcmp(command, "cat") == 0) {
         perform_command(cmd_cat, curr_dir, args);
     } else if (strcmp(command, "mv") == 0) {
-        perform_command(cmd_help, curr_dir, args);
+        perform_command(cmd_mv, curr_dir, args);
+    } else if (strcmp(command, "write") == 0) {
+        perform_command(cmd_write, curr_dir, args);
+    } else if (strcmp(command, "append") == 0) {
+        perform_command(cmd_append, curr_dir, args);
     } else {
         uart_send_data("Unknown command");
     }

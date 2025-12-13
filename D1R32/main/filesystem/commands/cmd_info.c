@@ -14,19 +14,19 @@ bool cmd_help(char *res, char *err, char *curr_dir, const char *args)
     // Set the helper message
     snprintf(res, MAX_MESSAGE_SIZE,
         "Commands:\n"
-        "   help               Show this help\n"
-        "   df                 Filesystem data\n"
-        "   pwd                Print current working directory\n"
-        "   ls [path]          List directory\n"
-        "   cd <path>          Change directory\n"
-        "   mkdir <dir>        Create directory\n"
-        "   rmdir <dir>        Remove empty directory\n"
-        "   touch <file>       Create file\n"
-        "   rm <file>          Remove file (doesn't include -r, includes -f)\n"
-        "   cat <file>         Print file\n"
-        "   vim <f>            Edit the file (vim emulator)\n"
-        "   mv <src> <dst>     Rename/move\n"
-        "   stat <path>        File info\n"
+        "   help                    Show this help\n"
+        "   df                      Filesystem data\n"
+        "   pwd                     Print current working directory\n"
+        "   ls [path]               List directory\n"
+        "   cd <path>               Change directory\n"
+        "   mkdir <dir>             Create directory\n"
+        "   rmdir <dir>             Remove empty directory\n"
+        "   touch <file>            Create file\n"
+        "   rm <file>               Remove file (doesn't include -r, includes -f)\n"
+        "   write <file> <text>     Write to the file\n"
+        "   append <file> <text>    Append to the text in the file\n"
+        "   mv <src> <dst>          Rename/move\n"
+        "   stat <path>             File info\n"
     );
 
     // Always will succeed
@@ -41,7 +41,8 @@ bool cmd_df(char *res, char *err, char *curr_dir, const char *args)
     //Check that the system is stable
     if (error == ESP_OK){
         //Save the message to the returning array
-        snprintf(res, MAX_MESSAGE_SIZE, "LittleFS mounted at %s (%u KB total, %u KB used)", LITTLE_FS_BASE_PATH, total, used);
+        snprintf(res, MAX_MESSAGE_SIZE, "LittleFS mounted at %s (%u KB total, %u KB used)", 
+                 LITTLE_FS_BASE_PATH, total/1000, used/1000);
         return true;
     }
     //Allocate error message
@@ -75,8 +76,9 @@ bool cmd_stat(char *res, char *err, char *curr_dir, const char *args)
 
     // Print the basic statistics
     snprintf(res, MAX_MESSAGE_SIZE,
-        "Path: %s\nType: %s\nSize: %ld\nMode: %o",
-        dir, type, file_stat.st_size, file_stat.st_mode & 0777
+        "Path: %s\nType: %s\nSize: %ld\nMode: %lo",
+        dir, type, file_stat.st_size, 
+        (long unsigned int)file_stat.st_mode & 0777
     );
 
     return true;

@@ -6,21 +6,27 @@
 
 // System Includes
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 
 bool cmd_cd(char *res, char *err, char *curr_dir, const char *args)
 {   
     // The resulting dir
-    char dir[MAX_DIR_EXPANSION];
+    char dir[MAX_DIR_EXPANSION] = {0};
 
     // If no destination -> Move to the root
     if (!args || args[0] == '\0') {
         snprintf(dir, sizeof(dir), "%s", LITTLE_FS_BASE_PATH);
+        return true;
     }
 
     // Guard for root access
-    if (args[0] == '\\') {
-        snprintf(dir, sizeof(dir), "%s", LITTLE_FS_BASE_PATH);
+    if (args[0] == '/') {
+        if (strcmp(args, "/") == 0) {
+            snprintf(dir, sizeof(dir), "%s", LITTLE_FS_BASE_PATH);
+        } else {
+            snprintf(dir, sizeof(dir), "%s%s", LITTLE_FS_BASE_PATH, args);
+        }
     } else {
         path_join(dir, sizeof(dir), curr_dir, args);
     }
@@ -41,8 +47,11 @@ bool cmd_cd(char *res, char *err, char *curr_dir, const char *args)
         return false;
     }
 
-    // Update the current directory
-    snprintf(curr_dir, MAX_DIR_EXPANSION, "%s", dir);
-
-    return true;
+    // Resolve for the real path
+    if (realpath(dir, curr_dir) != NULL) {
+        return true;
+    } else {
+        snprintf(err, MAX_MESSAGE_SIZE, "cd: Failed to resolve the path.");
+        return false;
+    }
 }
