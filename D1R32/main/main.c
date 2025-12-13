@@ -26,6 +26,8 @@
 //Standart header
 #include <stdbool.h>
 
+// Global variables
+volatile bool restart_pressed = false;
 
 void app_main(void)
 {
@@ -40,7 +42,7 @@ void app_main(void)
 
     /* 1.1) Start tasks for watching other inputs */
     // For scanning restart on keyboard
-    xTaskCreate(scan_restart, "res_watch", 2048, NULL, 10, NULL);
+    xTaskCreate(scan_restart, "res_watch", 2048, NULL, 1, NULL);
 
     //Start the infinite iteration
     while(1){
@@ -129,10 +131,13 @@ void app_main(void)
 
             /* 7) Eternal processing of user inputs */
             while(1){
-                /* 7.1) Wait for the input from the PI4 (user command) */
-                char res = uart_read(rx_buffer, true, 0);
+                /* 7.1) Reset the values */
+                limit = esp_timer_get_time() + WAIT_FOR_PI;
 
-                /* 7.2) Check restart button wasn't pressed */
+                /* 7.2) Wait for the input from the PI4 (user command) */
+                char res = uart_read(rx_buffer, true, limit);
+
+                /* 7.3) Check restart button wasn't pressed */
                 if (restart_pressed) {
                     // If it was pressed, inform debug
                     ESP_LOGI(TAG, "RESTART!");
@@ -144,7 +149,7 @@ void app_main(void)
                     break;
                 }
 
-                /* 7.3) Check that there wasn't buffer overflow */
+                /* 7.4) Check that there wasn't buffer overflow */
                 if (res == UART_READ_BUFFER_OVERFLOW) {
                     ESP_LOGI(TAG, "OVERFLOW!");
                     blink_error(LED_BUFFER_READ_OVERFLOW);
@@ -153,10 +158,12 @@ void app_main(void)
                     break;
                 }
 
-                /* 7.4) Process the given command */
-                select_command(rx_buffer, current_dir);
+                /* 7.5) Process the given command */
+                if (res == UART_READ_PASSED) {
+                    select_command(rx_buffer, current_dir);
+                }
 
-                /* 7.5) Return back to the 7.1 */
+                /* 7.6) Return back to the 7.1 */
             }
 
 

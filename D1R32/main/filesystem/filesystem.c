@@ -15,21 +15,37 @@
 void select_command(char *command, char *curr_dir){
     //Strip the trailing whitespaces
     trim(command);
-    //Go command by command and see if the submitted matches to any of the recognized ones
-    if (strcmp(command, "df")){
-        perform_command(cmd_df);
+
+    // When nothing was received
+    if (command[0] == '\0') {
+        uart_send_prompt(curr_dir);
+        return;
     }
+
+    //Go command by command and see if the submitted matches to any of the recognized ones
+    if (strcmp(command, "df") == 0){
+        perform_command(cmd_df);
+    } else {
+        uart_send_data("Unknown command");
+    }
+    
     //Then print the command prompt
     uart_send_prompt(curr_dir);
 }
 
 void perform_command(bool (*command)(char *, char *)){
     //Allocate the necessary space for the possible result of the command
-    char *res = malloc(MAX_MESSAGE_SIZE);
+    static char res[MAX_MESSAGE_SIZE];
     //Also allocate for possible error message
-    char *err_msg = malloc(MAX_MESSAGE_SIZE);
+    static char err_msg[MAX_MESSAGE_SIZE];
+
+    // Set the start char
+    res[0] = '\0';
+    err_msg[0] = '\0';
+
     //Perform the command and get if passed/failed
     bool err = command(res, err_msg);
+
     //Check if the command passed
     if (err == false){
         //Print to the terminal why it failed

@@ -66,25 +66,38 @@ char uart_read(char *read, bool use_timeout, int64_t time_until){
                 return UART_READ_TIMEOUT;
             }
         }
+
+        //If the pos is now bigger than max buffer
+        if (pos >= RX_BUFFER - 1){
+            //Buffer overflow - end the program
+            return UART_READ_BUFFER_OVERFLOW;
+        }
+        // Only read into remaining space
+        const uint32_t space = (uint32_t)(RX_BUFFER - 1 - pos);
         //Pull up the maximum size of the buffer - starting at the current pos
-        int n = uart_read_bytes(UART_PORT, read + pos, RX_BUFFER, pdMS_TO_TICKS(50));
+        int n = uart_read_bytes(UART_PORT, read + pos, space, pdMS_TO_TICKS(50));
+
         //Check that the last character is ! (that the message was read whole)
         //Since only one messages always pass we don't need to worry that multiple messages may be present in the buffer
         //If something was read
         if (n > 0){
             //Move teh current position
             pos += n;
-            //Check what the last char is
-            char last_char = read[pos-1];
-            //If the last char is '!' - whole message read
-            if (last_char == '!'){
-                //Mesage correctly received
+            // Find message terminator ('!') in the message
+            char *end = memchr(read, '!', (size_t)pos);
+            // Remove all (including) after the message terminator
+            if (end) {
+                // Remove '!'
+                *end = '\0'; 
+
+                // Trim trailing chars to '\0'
+                size_t len = strlen(read);
+                while (len > 0 && (read[len - 1] == '\n' || read[len - 1] == '\r')) {
+                    read[--len] = '\0';
+                }
+
+                // All passed correctly without a hitch
                 return UART_READ_PASSED;
-            }
-            //If the pos is now bigger than max buffer
-            if (pos >= RX_BUFFER){
-                //Buffer overflow - end the program
-                return UART_READ_BUFFER_OVERFLOW;
             }
         }
     }

@@ -9,6 +9,7 @@
 
 //System Includes
 #include "esp_log.h"
+#include "esp_task_wdt.h"
 
 void setup_hardware(void){
     //Configure the led - Used for informing user for small things
@@ -17,6 +18,8 @@ void setup_hardware(void){
     configure_keyboard();
     //Configure the UART communication for sending/receiving with the PI4
     configure_uart();
+    // Turn off watchdog logging
+    esp_log_level_set("task_wdt", ESP_LOG_NONE);
 }
 
 bool scan_for_selection(const char *valid, char *returned){
@@ -26,7 +29,7 @@ bool scan_for_selection(const char *valid, char *returned){
     //If we have gotten the RESTART back
     if (*returned == RESTART_KEY){
         //Meaning that restart was triggered
-        blink_error(3);
+        blink_error(LED_RESTART_PRESSED);
         //Return false to inform about restart
         return true;
     }

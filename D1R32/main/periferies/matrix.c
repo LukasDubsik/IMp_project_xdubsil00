@@ -144,6 +144,9 @@ char wait_for_press(const char* valid){
             blink_error(LED_INCORRECT_KEY_TYPED);
         }
         //Wait some time before the next scan
-        vTaskDelay(pdMS_TO_TICKS(5));
+        TickType_t d = pdMS_TO_TICKS(5);
+        if (d == 0) d = 1;
+        // Ensure at least one tick delay
+        vTaskDelay(d);
     }
 }

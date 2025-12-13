@@ -14,7 +14,7 @@
  * @def restart_pressed
  * @brief Tracks if the restart char ('6') was pressed
  */
-volatile bool restart_pressed = false;
+extern volatile bool restart_pressed;
 
 
 /* MACROS */
