@@ -44,3 +44,5 @@ bool cmd_cat(char *res, char *err, char *curr_dir, const char *args);
 
 // Commands for changing content
 bool cmd_mv(char *res, char *err, char *curr_dir, const char *args);
+bool cmd_write(char *res, char *err, char *curr_dir, const char *args);
+bool cmd_append(char *res, char *err, char *curr_dir, const char *args);

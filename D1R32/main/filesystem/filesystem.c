@@ -32,9 +32,32 @@ void select_command(char *command, char *curr_dir){
         trim((char *)args);
     }
 
-    //Go command by command and see if the submitted matches to any of the recognized ones
-    if (strcmp(command, "df") == 0){
+    // Go command by command and see if the submitted matches to 
+    // any of the recognized ones
+    if (strcmp(command, "df") == 0) {
         perform_command(cmd_df, curr_dir, args);
+    } else if (strcmp(command, "help") == 0) {
+        perform_command(cmd_help, curr_dir, args);
+    } else if (strcmp(command, "stat") == 0) {
+        perform_command(cmd_stat, curr_dir, args);
+    } else if (strcmp(command, "cd") == 0) {
+        perform_command(cmd_cd, curr_dir, args);
+    } else if (strcmp(command, "mkdir") == 0) {
+        perform_command(cmd_mkdir, curr_dir, args);
+    } else if (strcmp(command, "rmdir") == 0) {
+        perform_command(cmd_rmdir, curr_dir, args);
+    } else if (strcmp(command, "touch") == 0) {
+        perform_command(cmd_touch, curr_dir, args);
+    } else if (strcmp(command, "rm") == 0) {
+        perform_command(cmd_rm, curr_dir, args);
+    } else if (strcmp(command, "pwd") == 0) {
+        perform_command(cmd_pwd, curr_dir, args);
+    } else if (strcmp(command, "ls") == 0) {
+        perform_command(cmd_ls, curr_dir, args);
+    } else if (strcmp(command, "cat") == 0) {
+        perform_command(cmd_cat, curr_dir, args);
+    } else if (strcmp(command, "mv") == 0) {
+        perform_command(cmd_help, curr_dir, args);
     } else {
         uart_send_data("Unknown command");
     }
