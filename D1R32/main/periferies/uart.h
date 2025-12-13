@@ -40,6 +40,7 @@
  * @brief Size of the sender buffer.
  */
 #define TX_BUFFER 2048
+
 /**
  * @def UART_READ_PASSED
  * @brief Error code signifying that all passed correctly and all the data was read.
@@ -55,6 +56,22 @@
  * @brief Error code signifying that too much data in one message and buffer overflow occured.
  */
 #define UART_READ_BUFFER_OVERFLOW 2
+
+/**
+ * @def START_CMD
+ * @brief Start command when sent from Pi4 means it is working
+ */
+#define START_CMD "start_cmd"
+/**
+ * @def RST_CMD
+ * @brief Reset command when set to Pi4 will cause it to close as client has reset itself
+ */
+#define RST_CMD "rst_cmd"
+/**
+ * @def OVERFLOW_CMD
+ * @brief Overflow command when sent to Pi will cause it to shutdown
+ */
+#define OVERFLOW_CMD "overflow_cmd"
 
 
 /* PROTOTYPES */

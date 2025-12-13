@@ -117,10 +117,10 @@ void app_main(void)
                 break;
             }
             //The char read
-            ESP_LOGI(TAG, "Pressed the key: %c!", rx_buffer[0]);
-            //Then check what the message was - expecting just !
-            if (rx_buffer[0] != '!'){
-                ESP_LOGI(TAG, "INCORRECT RETURN!");
+            ESP_LOGI(TAG, "Returned from Pi: %s!", rx_buffer);
+            //Then check what the message was - expecting START_CMD
+            if (strcmp(rx_buffer, START_CMD) != 0){
+                ESP_LOGI(TAG, "START COMMAND NOT RECEIVED!");
                 blink_error(LED_UNEXPECTED_MESSAGE);
                 break;
             }
@@ -130,15 +130,33 @@ void app_main(void)
             /* 7) Eternal processing of user inputs */
             while(1){
                 /* 7.1) Wait for the input from the PI4 (user command) */
-                uart_read(rx_buffer, false, 0);
+                char res = uart_read(rx_buffer, true, 0);
 
-                blink_error(LED_UNEXPECTED_MESSAGE);
+                /* 7.2) Check restart button wasn't pressed */
+                if (restart_pressed) {
+                    // If it was pressed, inform debug
+                    ESP_LOGI(TAG, "RESTART!");
+                    // inform Pi4 so it can shut down
+                    uart_send_data(RST_CMD);
+                    // blink the restart sequence
+                    blink_error(LED_RESTART_PRESSED);
+                    // and exit the loop
+                    break;
+                }
 
-                /* 7.2) Process the given command */
+                /* 7.3) Check that there wasn't buffer overflow */
+                if (res == UART_READ_BUFFER_OVERFLOW) {
+                    ESP_LOGI(TAG, "OVERFLOW!");
+                    blink_error(LED_BUFFER_READ_OVERFLOW);
+                    // Inform the Pi
+                    uart_send_data(OVERFLOW_CMD);
+                    break;
+                }
+
+                /* 7.4) Process the given command */
                 select_command(rx_buffer, current_dir);
 
-                /* 7.3) Return back to the 7.1 */
-                blink_error(LED_UNEXPECTED_MESSAGE);
+                /* 7.5) Return back to the 7.1 */
             }
 
 

@@ -43,6 +43,11 @@
  */
 #define LED_READ_TIMEOUT 5
 /**
+ * @def LED_RESTART_PRESSED
+ * @brief Number of times the LED should flash when restart key was pressed.
+ */
+#define LED_RESTART_PRESSED 3
+/**
  * @def LED_UNEXPECTED_MESSAGE
  * @brief Number of times the LED should flash when unexpected data are recived.
  */
