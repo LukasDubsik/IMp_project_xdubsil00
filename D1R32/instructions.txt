@@ -1,0 +1,5 @@
+### The instructions on how to flash project on the D1R32
+1: Open the terminal (ctrl+shift+P)
+2: To build the project -> idf.py build
+3: To flash the project -> idf.py flash
+4: When reconfiguring -> idf.py reconfigure

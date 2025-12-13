@@ -10,7 +10,7 @@
  */
 
  //User defined headers
-#include "filesystem/commands.h"
+#include "filesystem/filesystem.h"
 #include "imp.h"
 #include "periferies/led.h"
 #include "periferies/uart.h"
@@ -21,6 +21,7 @@
 #include "freertos/task.h"
 #include "esp_timer.h"
 #include "esp_log.h"
+#include "tasks/tasks.h"
 
 //Standart header
 #include <stdbool.h>
@@ -28,13 +29,18 @@
 
 void app_main(void)
 {
-    /* 0) Declare and define the values that will present thorought */
-    char current_dir[MAX_DIR_EXPANSION] = {0};  //The directory of the file system we are creating and in which we currently are in
+    /* 0) Declare and define the values that will be present thorough */
+    //The directory of the file system we are creating and in which we currently are in
+    char current_dir[MAX_DIR_EXPANSION] = {0};
     char rx_buffer[RX_BUFFER] = {0};
 
     /* 1) Run configuration on peripherals that will be used */
     setup_hardware();
     mount_little_fs();
+
+    /* 1.1) Start tasks for watching other inputs */
+    // For scanning restart on keyboard
+    xTaskCreate(scan_restart, "res_watch", 2048, NULL, 10, NULL);
 
     //Start the infinite iteration
     while(1){
@@ -62,8 +68,9 @@ void app_main(void)
 
             /* 3) Setup the file system based on the selected mode */
             if (mode == '1'){
-                passed = set_new_directory_path(current_dir, LITTLE_FS_BASE_PATH); //Always start in the same directory - the root
-                //While genrally it is okay if this fails - here it would brek the whole system, so exit
+                //Always start in the same directory - the root
+                passed = set_new_directory_path(current_dir, LITTLE_FS_BASE_PATH);
+                //While generally it is okay if this fails - here it would break the whole system, so exit
                 if (!passed){
                     break;
             }
@@ -80,7 +87,7 @@ void app_main(void)
             }
 
 
-            /* 5) operate based on teh selected type */
+            /* 5) operate based on the selected type */
             //TODO
 
 
@@ -117,7 +124,7 @@ void app_main(void)
                 blink_error(LED_UNEXPECTED_MESSAGE);
                 break;
             }
-            //Now that this is setup we can finally start fully coimmunicating
+            //Now that this is setup we can finally start fully communicating
         
 
             /* 7) Eternal processing of user inputs */
@@ -130,7 +137,7 @@ void app_main(void)
                 /* 7.2) Process the given command */
                 select_command(rx_buffer, current_dir);
 
-                /* 7.3) Retrun back to the 7.1 */
+                /* 7.3) Return back to the 7.1 */
                 blink_error(LED_UNEXPECTED_MESSAGE);
             }
 
