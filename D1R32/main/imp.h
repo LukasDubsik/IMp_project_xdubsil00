@@ -3,6 +3,7 @@
 /* INCLUDES */
 //User defined Includes
 #include "periferies/uart.h"
+#include "sd_protocol_types.h"
 
 //Standart Includes
 #include <stdbool.h>
@@ -15,6 +16,21 @@
  * @brief Tracks if the restart char ('6') was pressed
  */
 extern volatile bool restart_pressed;
+/**
+ * @def fs_mounted
+ * @brief Tracks if the fs filesystem is currently mounted
+ */
+extern bool fs_mounted;
+/**
+ * @def sd_mounted
+ * @brief Tracks if the sd filesystem is currently mounted
+ */
+extern bool sd_mounted;
+/**
+ * @def sd_card
+ * @brief Pointer to the mounted card
+ */
+extern sdmmc_card_t *sd_card;
 
 
 /* MACROS */
@@ -101,3 +117,5 @@ bool set_new_directory_path(char *dir_path, const char *new_path);
  * @return True if new path was set correctly, false if failed - the path remains unchanged.
  */
 bool append_path(char *dir_path, char *append);
+
+void apply_mode(char mode, char *curr_dir);

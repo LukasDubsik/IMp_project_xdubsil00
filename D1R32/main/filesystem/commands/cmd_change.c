@@ -4,6 +4,7 @@
 #include "imp.h"
 
 // System Includes
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -41,7 +42,9 @@ bool cmd_mv(char *res, char *err, char *curr_dir, const char *args)
     // Attempt to rename (move) the file
     int n = rename(src_path, dst_path);
     if (n != 0) {
-        snprintf(err, MAX_MESSAGE_SIZE, "mv: failed to move (rename) the file");
+        const int e = errno;
+        snprintf(err, MAX_MESSAGE_SIZE, "mv: %s (src='%s' dst='%s')",
+                 strerror(e), src_path, dst_path);
         return false;
     }
 
@@ -68,7 +71,10 @@ static bool write_into_file(char *res, char *err, char *curr_dir,
     // Save the first and second args -> file - text
     char *save = NULL;
     char *file = strtok_r(hold, " ", &save);
-    char *text = strtok_r(NULL, " ", &save);
+    char *text = save;
+    while (text && *text == ' ') {
+        text++;
+    }
 
     // Check both params are present
     if (file == NULL || text == NULL) {
@@ -91,13 +97,14 @@ static bool write_into_file(char *res, char *err, char *curr_dir,
     }
 
     // Write text into it (mode guarantees how)
-    int written_size = (int)fwrite(text, 1, sizeof(text), f);
+    size_t len = strlen(text);
+    int written_size = (int)fwrite(text, 1, len, f);
 
     // Close the file
     fclose(f);
 
     // Check we have written what was expected to be written
-    if (sizeof(text) != written_size) {
+    if (len != written_size) {
         snprintf(err, MAX_MESSAGE_SIZE, "%s: Failed to write all the data into the file.", m);
         return false;
     }

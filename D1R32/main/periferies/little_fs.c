@@ -12,7 +12,7 @@
 #include <sys/unistd.h>
 
 
-void mount_little_fs(void)
+bool mount_little_fs(void)
 {
     //Set up the struct for mounting properties
     esp_vfs_littlefs_conf_t conf = {
@@ -26,9 +26,23 @@ void mount_little_fs(void)
     esp_err_t error = esp_vfs_littlefs_register(&conf);
     //If the mounting failed
     if (error != ESP_OK){
-        //Blink the error code
-        blink_error(LED_MOUNTING_FAILED);
-        //Trigger full system reboot
-        abort();
+        return false;
     }
+
+    return true;
+}
+
+bool unmount_little_fs(void)
+{
+    // Return just true if not mounted
+    if (!fs_mounted) {
+        return true;
+    }
+
+    // Unmount the filesystem
+    esp_vfs_littlefs_unregister(LITTLE_FS_PARTITION_LABEL);
+    // Unset the mounted flag
+    fs_mounted = false;
+
+    return true;
 }

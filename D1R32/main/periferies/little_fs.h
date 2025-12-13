@@ -1,5 +1,8 @@
 #pragma once
 
+// Includes
+#include <stdbool.h>
+
 /* MACROS */
 /**
  * @def LITTLE_FS_PARTITION_LABEL
@@ -17,4 +20,5 @@
 /**
  * @brief Mounts and redirects to the little_fs filesystem.
  */
-void mount_little_fs(void);
+bool mount_little_fs(void);
+bool unmount_little_fs(void);

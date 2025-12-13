@@ -1,7 +1,10 @@
 //User defined Includes
+#include "benchmark/benchmark.h"
 #include "imp.h"
+#include "periferies/little_fs.h"
 #include "periferies/matrix.h"
 #include "periferies/led.h"
+#include "periferies/sdcard.h"
 #include "periferies/uart.h"
 
 //Standart includes
@@ -71,4 +74,67 @@ bool append_path(char *dir_path, char *append){
     snprintf(dir_path + end, MAX_DIR_EXPANSION - end, "/%s", append);
     //And return that all went AOK
     return true;
+}
+
+void apply_mode(char mode, char *curr_dir)
+{
+    // '1' is a mode for Normal file mounting
+    if (mode == '1') {
+        // Start by unmounting possibly mounted SD card
+        unmount_sdcard();
+        // Attempt mounting the little fs file system
+        if (!mount_little_fs()) {
+            //Blink the error code
+            blink_error(LED_MOUNTING_FAILED);
+            //Trigger full system reboot
+            abort();
+        }
+        // Set the current directory as base mount
+        snprintf(curr_dir, MAX_MESSAGE_SIZE, LITTLE_FS_BASE_PATH);
+    } else if (mode == '2') {
+        // '2' Is for mounting on SD external card
+        // Start by unmounting possibly mounted Little FS
+        unmount_little_fs();
+        // Then mount
+        if (!mount_sdcard()) {
+            //Blink the error code
+            blink_error(LED_MOUNTING_FAILED);
+            //Trigger full system reboot
+            abort();
+        }
+        // Set the current directory as base mount
+        snprintf(curr_dir, MAX_MESSAGE_SIZE, SD_BASE_PATH);
+    } else if (mode == '3') {
+        // '3' is the mod where we are changing params on the little fs
+        // Start by unmounting possibly mounted Little FS
+        unmount_little_fs();
+        // Then mount
+        if (!mount_sdcard()) {
+            //Blink the error code
+            blink_error(LED_MOUNTING_FAILED);
+            //Trigger full system reboot
+            abort();
+        }
+        // Set the current directory as base mount
+        snprintf(curr_dir, MAX_MESSAGE_SIZE, SD_BASE_PATH);
+
+        // Change the params
+
+    } else if (mode == '4') {
+        // '3' is the benchmarking mode, just prints the stats
+        // Start by unmounting possibly mounted SD card
+        unmount_sdcard();
+        // Attempt mounting the little fs file system
+        if (!mount_little_fs()) {
+            //Blink the error code
+            blink_error(LED_MOUNTING_FAILED);
+            //Trigger full system reboot
+            abort();
+        }
+        // Set the current directory as base mount
+        snprintf(curr_dir, MAX_MESSAGE_SIZE, LITTLE_FS_BASE_PATH);
+
+        // Run the benchmark
+        run_benchmark();
+    }
 }

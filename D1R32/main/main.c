@@ -28,6 +28,9 @@
 
 // Global variables
 volatile bool restart_pressed = false;
+bool fs_mounted = false;
+bool sd_mounted = false;
+sdmmc_card_t *sd_card = NULL;
 
 void app_main(void)
 {
