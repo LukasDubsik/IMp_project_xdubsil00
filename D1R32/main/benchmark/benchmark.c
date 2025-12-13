@@ -59,7 +59,7 @@ void run_benchmark(void)
     static char args[MAX_MESSAGE_SIZE] = {0};
 
     // Then start running the benchmark command by command
-
+ 
     // 1) Create and remove files
     int run = 0;
     // The trackers

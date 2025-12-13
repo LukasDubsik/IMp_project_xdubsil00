@@ -9,7 +9,7 @@
 #include <string.h>
 
 bool cmd_mv(char *res, char *err, char *curr_dir, const char *args)
-{
+{ 
     // Check that arg to create is present
     if (!args || args[0] == '\0') {
         snprintf(err, MAX_MESSAGE_SIZE, "mv: Missing args");
