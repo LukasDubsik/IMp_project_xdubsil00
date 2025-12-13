@@ -1,11 +1,12 @@
 #Imports
 import serial
-import sys
 
 # Define the special commands
-start_cmd = "start_cmd"
-rst_cmd = "rst_cmd"
-overflow_cmd = "overflow_cmd"
+START_CMD = "start_cmd"
+RST_CMD = "rst_cmd"
+OVERFLOW_CMD = "overflow_cmd"
+
+PROMPT_PREFIX = "IMP@file_system:"
 
 def check_special_input(line: str) -> tuple[bool, bool]:
     """Check if the input is any of the special commands
@@ -15,89 +16,98 @@ def check_special_input(line: str) -> tuple[bool, bool]:
         First bool is if a special value was detected, second if to 
         shut the program or no.
     """
-    if (line == rst_cmd):
+    if (line == RST_CMD):
         print("The restart was pressed! Shutting down the program")
         return True, True
-    if (line == overflow_cmd):
+    if (line == OVERFLOW_CMD):
         print("Overflow on client was detected! The program is terminating")
         return True, True
     return False, False
 
-def wait_for_result() -> bool:
+def read_frame(ser: serial.Serial) -> str | None:
+    """Read one input until termination of !
+    """
+    # Read one ESP->Pi frame terminated by '!'
+    data = ser.read_until(b'!')
+    if not data:
+        return None
+    return data.decode(errors="ignore").rstrip("!\r\n")
+
+def wait_for_result(ser: serial.Serial) -> str:
     """Scan the input until something received and then do a quick analysis.
 
         Returns False if not to shut down the program, True otherwise.
     """
+    while True:
+        # Read the message from the D1R32
+        msg = read_frame(ser)
+        if msg is None:
+            continue
+        # Check if special message send
+        special, shutdown = check_special_input(msg)
+        if special:
+            if shutdown:
+                raise SystemExit(0)
+            continue
+        # Check if we are receiving starting prompt
+        if msg.startswith(PROMPT_PREFIX):
+            return msg
+        # Otherwise just print the receiving data
+        if msg:
+            print(msg)
+
+
+def main():
+    #Set the serial communication - baud agreed upon beforehand
+    ser = serial.Serial('/dev/serial0', 115200, timeout=1)
+
+    #Wait for the D1R32 to send the initiation sequence
     try:
-        while True:
-            data = ser.read_until(b'!')
-            line = data.decode(errors='ignore').rstrip("!\r\n")
-            # Check no special signals were sent
-            special = check_special_input(line)
-            # If so exit with signal to end
-            if (special[0]):
-                return special[1]
-            if line:
-                #Return the data exactly
-                print(line)
-                return False
-    except Exception as e:
-        sys.stdout.write(f"\n[serial_reader stopped: {e}]\n")
+        # Reset the buffer and print starting prompt
+        ser.reset_input_buffer()
+        print("Waiting for D1R32 to start the communication...")
 
-#Set the serial communication - baud agreed upon beforehand
-ser = serial.Serial('/dev/serial0', 115200, timeout=1)
+        # Wait for the starting sequence from D1R32
+        first = None
+        while first is None:
+            first = read_frame(ser)
 
-#Wait for the D1R32 to send the initiation sequence
-print("Waiting for D1R32 to start the communication...")
-while True:
-    line = ser.readline().decode(errors='ignore').strip()
-    #If there is an input - Anything is accepted
-    #But it will be the initial header for the file system
-    if line:
-        #Send message acknowledging the presence of the PI
-        ser.write((start_cmd + "!").encode("utf-8"))
-        #Then flush it, so no data are left out
+        # Inform the user and D1R32 of the running program here
+        ser.write((START_CMD + "!").encode("utf-8"))
         ser.flush()
         print("Communication established ;). Booting the filesystem now...")
-        #print the first message - header of the filesystem
-        print(line)
-        #And exit the loop
-        break
 
-#Wait for the user to print to the console
-try:
-    while(True):
-        #Read a whole line from the console - blocked until Enter
-        read_line = ser.readline()
-        # Check if something returned
-        if not read_line:
-            continue
-        #if user terminates the communication
-        if read_line == "":  # EOF
-            break
-
-        #Ensure we end with '!'
-        read_line = read_line.decode(errors="replace")
-
-        #Send the data and flush it
-        if line.startswith("IMP@file_system:"):
-            prompt = line.rstrip("\r\n")
-            cmd = input(prompt)
-            ser.write((cmd.strip() + "!").encode())
-            ser.flush()
+        # Decode
+        if first and first.startswith(PROMPT_PREFIX):
+            prompt = first
         else:
-            # Normal output from ESP: print as-is
-            print(line, end="")
-        #Wait for the response from the D1R32
-        res: bool = wait_for_result()
-        # Shut down the program if true
-        if (res):
-            break
+            if first:
+                print(first)
+            prompt = wait_for_result(ser)
 
-except Exception:
-    pass
-finally:
-    #Inform about closing the link and close it
-    print("\nClosing serial…")
-    ser.close()
+        # Final interactive loop
+        while True:
+            # Try and read the input prompt
+            try:
+                cmd = input(prompt)
+            except EOFError:
+                break
+            # Send the input to D1R32 -> Add th terminator and formate
+            ser.write((cmd.strip() + "!").encode("utf-8"))
+            ser.flush()
+            # Wait for the results from the D1R32
+            prompt = wait_for_result(ser)
 
+    except KeyboardInterrupt:
+        # Ctrl-C
+        pass
+    except EOFError:
+        # Ctrl-D
+        pass
+    finally:
+        print("\nClosing serial…")
+        ser.close()
+
+
+if __name__ == "__main__":
+    main()

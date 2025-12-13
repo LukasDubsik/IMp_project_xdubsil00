@@ -82,7 +82,7 @@ void configure_uart(void);
 /**
  * @brief Send a newline through the uart communication
  */
-void uart_newline(void);
+void uart_term(void);
 /**
  * @brief print the prompt as is typical in console for fole systems
  *

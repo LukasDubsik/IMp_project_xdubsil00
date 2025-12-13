@@ -22,9 +22,19 @@ void select_command(char *command, char *curr_dir){
         return;
     }
 
+    // Split the command for possible args
+    char *arg_pos = NULL;
+    strtok_r(command, " ", &arg_pos);
+    const char *args = (arg_pos != NULL) ? arg_pos : "";
+
+    // Trim the arguments too
+    if (args && args[0] != '\0') {
+        trim((char *)args);
+    }
+
     //Go command by command and see if the submitted matches to any of the recognized ones
     if (strcmp(command, "df") == 0){
-        perform_command(cmd_df);
+        perform_command(cmd_df, curr_dir, args);
     } else {
         uart_send_data("Unknown command");
     }
@@ -33,7 +43,8 @@ void select_command(char *command, char *curr_dir){
     uart_send_prompt(curr_dir);
 }
 
-void perform_command(bool (*command)(char *, char *)){
+void perform_command(bool (*command)(char *, char *, char *, const char *),
+                     char *curr_dir, const char *args){
     //Allocate the necessary space for the possible result of the command
     static char res[MAX_MESSAGE_SIZE];
     //Also allocate for possible error message
@@ -44,7 +55,7 @@ void perform_command(bool (*command)(char *, char *)){
     err_msg[0] = '\0';
 
     //Perform the command and get if passed/failed
-    bool err = command(res, err_msg);
+    bool err = command(res, err_msg, curr_dir, args);
 
     //Check if the command passed
     if (err == false){
@@ -57,17 +68,21 @@ void perform_command(bool (*command)(char *, char *)){
     }
 }
 
-bool cmd_df(char *res, char *err){
-    //Get information about current system configuration
-    size_t total = 0, used = 0;
-    int error = esp_littlefs_info(LITTLE_FS_PARTITION_LABEL, &total, &used);
-    //Check that the system is stable
-    if (error == ESP_OK){
-        //Save the message to the returning array
-        snprintf(res, MAX_MESSAGE_SIZE, "LittleFS mounted at %s (%u KB total, %u KB used)", LITTLE_FS_BASE_PATH, total, used);
-        return true;
+void path_join(char *out, int size, const char *base, const char *rel)
+{
+    // If the path starts with '/' treat as absolute path
+    // The absolute path is always under "/littlefs"
+    // No changing between possible disks (for now disabled)
+    if (rel[0] == '/') {
+        snprintf(out, (size_t)size, "%s%s", LITTLE_FS_BASE_PATH, rel);
+        return;
     }
-    //Allocate error message
-    snprintf(err, MAX_MESSAGE_SIZE, "Couldn't get statistics about the mounted system, possible internal error.");
-    return false;
+
+    // If the path ends with '/'
+    if (base[strlen(base) - 1] == '/') {
+        snprintf(out, (size_t)size, "%s%s", base, rel);
+    } else {
+        // If it doesn't, add it
+        snprintf(out, (size_t)size, "%s/%s", base, rel);
+    }
 }

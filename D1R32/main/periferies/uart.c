@@ -27,10 +27,10 @@ void configure_uart(void)
     ESP_ERROR_CHECK(uart_driver_install(UART_PORT, RX_BUFFER, TX_BUFFER, 0, NULL, 0));
 }
 
-void uart_newline(void){
+void uart_term(void){
     //String for more safer transfer
-    const char nl[2] = "\n";
-    uart_write_bytes(UART_PORT, nl, 1);
+    const char term = '!';
+    uart_write_bytes(UART_PORT, &term, 1);
 }
 
 void uart_send_prompt(const char *current_folder)
@@ -42,7 +42,7 @@ void uart_send_prompt(const char *current_folder)
     //Then write the '$ ' - inspired by ubuntu
     uart_write_bytes(UART_PORT, " $ ", 3);
     //Then write the newline char
-    uart_newline();
+    uart_term();
 }
 
 void uart_send_data(const char *data)
@@ -50,7 +50,7 @@ void uart_send_data(const char *data)
     //Write the given data
     uart_write_bytes(UART_PORT, data, strlen(data));
     //Then a newline
-    uart_newline();
+    uart_term();
 }
 
 char uart_read(char *read, bool use_timeout, int64_t time_until){
