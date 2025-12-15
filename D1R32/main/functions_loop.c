@@ -1,7 +1,5 @@
 //User defined Includes
 #include "benchmark/benchmark.h"
-#include "driver/sdspi_host.h"
-#include "hal/spi_types.h"
 #include "imp.h"
 #include "params/params.h"
 #include "periferies/little_fs.h"
@@ -15,7 +13,6 @@
 
 //System Includes
 #include "esp_log.h"
-#include "esp_task_wdt.h"
 
 void setup_hardware(void){
     //Configure the led - Used for informing user for small things
@@ -83,6 +80,8 @@ void apply_mode(char mode, char *curr_dir)
 {
     // '1' is a mode for Normal file mounting
     if (mode == '1') {
+        // Unmount for safety
+        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
         // Start by unmounting possibly mounted SD card
         unmount_sdcard();
         // Attempt mounting the little fs file system
@@ -98,6 +97,8 @@ void apply_mode(char mode, char *curr_dir)
             abort();
         }
     } else if (mode == '2') {
+        // Unmount for safety
+        unmount_sdcard();
         // '2' Is for mounting on SD external card
         // Start by unmounting possibly mounted Little FS
         unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
@@ -141,6 +142,9 @@ void apply_mode(char mode, char *curr_dir)
         // And get its stats
         littlefs_stats(LITTLE_FS_PARTITION_LABEL);
 
+        // Unmount for safety
+        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
+
     } else if (mode == '4') {
         // '3' is the benchmarking mode, just prints the stats
         // Start by unmounting possibly mounted SD card
@@ -160,7 +164,7 @@ void apply_mode(char mode, char *curr_dir)
 
         // Switch to the sd card for the next benchmark
         // Start by unmounting the mounted Little FS
-        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
+        unmount_little_fs(BENCHMARK_PARTITION_LABEL);
         // Then mount
         if (!mount_sdcard()) {
             //Blink the error code
@@ -172,5 +176,8 @@ void apply_mode(char mode, char *curr_dir)
         // Run the benchmark for the sd card file system
         ESP_LOGI(TAG, "BENCHMARK FOR SD CARD:");
         run_benchmark(SD_BASE_PATH);
+
+        // Unmount for safety
+        unmount_sdcard();
     }
 }

@@ -35,6 +35,9 @@ bool cmd_cat(char *res, char *err, char *curr_dir, const char *args)
     // Set the last char as end of string
     res[(size_t)read_bytes] = '\0';
 
+    // Close the file
+    fclose(f);
+
     // This means it will be printed even if it needs to be truncated
 
     return true;

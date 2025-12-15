@@ -1,14 +1,11 @@
 //User Includes
 #include "little_fs.h"
-#include "led.h"
 #include "../imp.h"
 
 //Systemn Includes
 #include "esp_littlefs.h"
-#include "esp_log.h"
 
 //Standart Includes
-#include <errno.h>
 #include <sys/unistd.h>
 
 

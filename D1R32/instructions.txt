@@ -3,3 +3,11 @@
 2: To build the project -> idf.py build
 3: To flash the project -> idf.py flash
 4: When reconfiguring -> idf.py reconfigure
+
+
+### Connecting the Pi4
+1: ip -brlink and nmcli dev status (The connectivity)
+2: Find ethernets (Most possibly at enp0s31f6)
+3: List connected by ip neigh show dev enp0s31f6 (or other)
+4: Ping if connected -> ping -c 3 10.42.0.164 (as an example)
+5: Use that ip address for ssh lukasdubsik@<ip> (ssh lukasdubsik@10.42.0.164)
