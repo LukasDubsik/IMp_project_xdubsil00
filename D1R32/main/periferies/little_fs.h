@@ -20,5 +20,5 @@
 /**
  * @brief Mounts and redirects to the little_fs filesystem.
  */
-bool mount_little_fs(void);
-bool unmount_little_fs(void);
+bool mount_little_fs(char *base_path, char *part);
+bool unmount_little_fs(char *part);

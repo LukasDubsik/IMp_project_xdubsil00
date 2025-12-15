@@ -79,6 +79,9 @@ bool cmd_touch(char *res, char *err, char *curr_dir, const char *args)
         return false;
     }
 
+    // Close the file
+    fclose(f);
+
     // Don't inform about success -> Not an error return means success
     return true;
 }

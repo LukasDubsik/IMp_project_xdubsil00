@@ -32,6 +32,18 @@ bool mount_sdcard(void)
     sdmmc_host_t host = SDSPI_HOST_DEFAULT();
     host.slot = VSPI_HOST;
 
+    // Add slower speed for probing the sd card
+    host.max_freq_khz = 400;
+
+    // Add guard for pullup
+    gpio_config_t io = {
+        .pin_bit_mask = 1ULL << SD_CS,
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = GPIO_PULLUP_ENABLE,
+    };
+    gpio_config(&io);
+    gpio_set_level(SD_CS, 1);
+
     // Configure the bus for communication for the sd card
     // This uses the Hardware connected pins on the chip/sd card
     spi_bus_config_t bus_cfg = {
@@ -54,10 +66,13 @@ bool mount_sdcard(void)
     slot.gpio_cs = SD_CS;
     slot.host_id = (spi_host_device_t)host.slot;
 
-    if (esp_vfs_fat_sdspi_mount(SD_BASE_PATH, &host,
-        &slot, &mount_config, &sd_card) != ESP_OK) {
-        ESP_LOGI(TAG, "Failed mounting the SD card!");
-        // Free the allocated bus
+    esp_err_t ret = esp_vfs_fat_sdspi_mount(SD_BASE_PATH, &host,
+                                            &slot, &mount_config, 
+                                            &sd_card);
+
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "SD mount failed: %s (0x%x)", esp_err_to_name(ret), (unsigned)ret);
+        // Free the allocated bus upon an error
         spi_bus_free((spi_host_device_t)host.slot);
         return false;
     }

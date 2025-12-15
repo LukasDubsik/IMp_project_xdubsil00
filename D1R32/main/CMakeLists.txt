@@ -5,6 +5,9 @@ idf_component_register(
         "filesystem/commands/cmd_change.c" "filesystem/commands/cmd_create.c"
         "filesystem/commands/cmd_info.c" "filesystem/commands/cmd_move.c"
         "filesystem/commands/cmd_view.c"
+        "benchmark/benchmark.c"
+        "periferies/sdcard.c"
+        "params/params.c" "params/tree.c"
   INCLUDE_DIRS "."
   REQUIRES esp_rom spiffs fatfs wear_levelling vfs sdmmc driver esp_timer littlefs
 )

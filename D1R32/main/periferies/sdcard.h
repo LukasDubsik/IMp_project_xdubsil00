@@ -30,22 +30,22 @@
  * @def SD_MOSI
  * @brief Pin connected for MOSI on the SD card
  */
-#define SD_MOSI 23
+#define SD_MOSI GPIO_NUM_23
 /**
  * @def SD_MISO
  * @brief Pin connected for MISO on the SD card
  */
-#define SD_MISO 19
+#define SD_MISO GPIO_NUM_19
 /**
  * @def SD_SCK
  * @brief Pin connected for SCK on the SD card
  */
-#define SD_SCK  18
+#define SD_SCK GPIO_NUM_18
 /**
  * @def SD_CS
  * @brief Pin connected for CS on the SD card
  */
-#define SD_CS   5
+#define SD_CS GPIO_NUM_5
 
 
 /* PROTOTYPES */

@@ -1,6 +1,9 @@
 //User defined Includes
 #include "benchmark/benchmark.h"
+#include "driver/sdspi_host.h"
+#include "hal/spi_types.h"
 #include "imp.h"
+#include "params/params.h"
 #include "periferies/little_fs.h"
 #include "periferies/matrix.h"
 #include "periferies/led.h"
@@ -83,18 +86,21 @@ void apply_mode(char mode, char *curr_dir)
         // Start by unmounting possibly mounted SD card
         unmount_sdcard();
         // Attempt mounting the little fs file system
-        if (!mount_little_fs()) {
+        if (!mount_little_fs(LITTLE_FS_BASE_PATH, LITTLE_FS_PARTITION_LABEL)) {
             //Blink the error code
             blink_error(LED_MOUNTING_FAILED);
             //Trigger full system reboot
             abort();
         }
         // Set the current directory as base mount
-        snprintf(curr_dir, MAX_MESSAGE_SIZE, LITTLE_FS_BASE_PATH);
+        bool r = set_new_directory_path(curr_dir, LITTLE_FS_BASE_PATH);
+        if (!r) {
+            abort();
+        }
     } else if (mode == '2') {
         // '2' Is for mounting on SD external card
         // Start by unmounting possibly mounted Little FS
-        unmount_little_fs();
+        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
         // Then mount
         if (!mount_sdcard()) {
             //Blink the error code
@@ -103,11 +109,14 @@ void apply_mode(char mode, char *curr_dir)
             abort();
         }
         // Set the current directory as base mount
-        snprintf(curr_dir, MAX_MESSAGE_SIZE, SD_BASE_PATH);
+        bool r = set_new_directory_path(curr_dir, SD_BASE_PATH);
+        if (!r) {
+            abort();
+        }
     } else if (mode == '3') {
         // '3' is the mod where we are changing params on the little fs
         // Start by unmounting possibly mounted Little FS
-        unmount_little_fs();
+        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
         // Then mount
         if (!mount_sdcard()) {
             //Blink the error code
@@ -115,26 +124,53 @@ void apply_mode(char mode, char *curr_dir)
             //Trigger full system reboot
             abort();
         }
-        // Set the current directory as base mount
-        snprintf(curr_dir, MAX_MESSAGE_SIZE, SD_BASE_PATH);
 
-        // Change the params
+        // Get the values on the disk
+        disk_stats(SD_BASE_PATH);
+
+        // Then load the little fs
+        unmount_sdcard();
+        // Attempt mounting the little fs file system
+        if (!mount_little_fs(LITTLE_FS_BASE_PATH, LITTLE_FS_PARTITION_LABEL)) {
+            //Blink the error code
+            blink_error(LED_MOUNTING_FAILED);
+            //Trigger full system reboot
+            abort();
+        }
+
+        // And get its stats
+        littlefs_stats(LITTLE_FS_PARTITION_LABEL);
 
     } else if (mode == '4') {
         // '3' is the benchmarking mode, just prints the stats
         // Start by unmounting possibly mounted SD card
         unmount_sdcard();
         // Attempt mounting the little fs file system
-        if (!mount_little_fs()) {
+        if (!mount_little_fs(BENCHMARK_BASE_PATH, BENCHMARK_PARTITION_LABEL)) {
             //Blink the error code
             blink_error(LED_MOUNTING_FAILED);
             //Trigger full system reboot
             abort();
         }
-        // Set the current directory as base mount
-        snprintf(curr_dir, MAX_MESSAGE_SIZE, LITTLE_FS_BASE_PATH);
 
-        // Run the benchmark
-        run_benchmark();
+        // Run the benchmark for the little_fs file system
+        ESP_LOGI(TAG, "BENCHMARK FOR LITTLE FS:");
+        run_benchmark(BENCHMARK_BASE_PATH);
+
+
+        // Switch to the sd card for the next benchmark
+        // Start by unmounting the mounted Little FS
+        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
+        // Then mount
+        if (!mount_sdcard()) {
+            //Blink the error code
+            blink_error(LED_MOUNTING_FAILED);
+            //Trigger full system reboot
+            abort();
+        }
+
+        // Run the benchmark for the sd card file system
+        ESP_LOGI(TAG, "BENCHMARK FOR SD CARD:");
+        run_benchmark(SD_BASE_PATH);
     }
 }

@@ -41,7 +41,7 @@ void app_main(void)
 
     /* 1) Run configuration on peripherals that will be used */
     setup_hardware();
-    mount_little_fs();
+    //mount_little_fs();
 
     /* 1.1) Start tasks for watching other inputs */
     // For scanning restart on keyboard
@@ -72,35 +72,18 @@ void app_main(void)
 
 
             /* 3) Setup the file system based on the selected mode */
-            if (mode == '1'){
-                //Always start in the same directory - the root
-                passed = set_new_directory_path(current_dir, LITTLE_FS_BASE_PATH);
-                //While generally it is okay if this fails - here it would break the whole system, so exit
-                if (!passed){
-                    break;
-            }
-            }
-            //TODO
-
-
-            /* 4) Select the type of the operation (A, B) */
-            char type = '\0';
-            restart = scan_for_selection("AB", &type);
-            //By breaking out here we still remain in the loop that we will never escape
-            if (restart){
+            apply_mode(mode, current_dir);
+            if (mode == '4' || mode == '3'){
+                // On benchmark mode just reiterate the system again
                 break;
             }
 
 
-            /* 5) operate based on the selected type */
-            //TODO
-
-
-            /* 6.1) Send the message to the PI4 via UART */
+            /* 4.1) Send the message to the PI4 via UART */
             //The first message is the prompt, which will be printed on the PI and boot the file system
             uart_send_prompt(current_dir);
 
-            /* 6.2) Wait for response - signaling all is running correctly on its end */
+            /* 4.2) Wait for response - signaling all is running correctly on its end */
             //Set a waiting time
             int64_t limit = esp_timer_get_time() + WAIT_FOR_PI;
             //Iterate until the time limit runs out
@@ -132,15 +115,15 @@ void app_main(void)
             //Now that this is setup we can finally start fully communicating
         
 
-            /* 7) Eternal processing of user inputs */
+            /* 5) Eternal processing of user inputs */
             while(1){
-                /* 7.1) Reset the values */
+                /* 5.1) Reset the values */
                 limit = esp_timer_get_time() + WAIT_FOR_PI;
 
-                /* 7.2) Wait for the input from the PI4 (user command) */
+                /* 5.2) Wait for the input from the PI4 (user command) */
                 char res = uart_read(rx_buffer, true, limit);
 
-                /* 7.3) Check restart button wasn't pressed */
+                /* 5.3) Check restart button wasn't pressed */
                 if (restart_pressed) {
                     // Restart the restart
                     restart_pressed = false;
@@ -154,7 +137,7 @@ void app_main(void)
                     break;
                 }
 
-                /* 7.4) Check that there wasn't buffer overflow */
+                /* 5.4) Check that there wasn't buffer overflow */
                 if (res == UART_READ_BUFFER_OVERFLOW) {
                     ESP_LOGI(TAG, "OVERFLOW!");
                     blink_error(LED_BUFFER_READ_OVERFLOW);
@@ -163,12 +146,12 @@ void app_main(void)
                     break;
                 }
 
-                /* 7.5) Process the given command */
+                /* 5.5) Process the given command */
                 if (res == UART_READ_PASSED) {
                     select_command(rx_buffer, current_dir);
                 }
 
-                /* 7.6) Return back to the 7.1 */
+                /* 5.6) Return back to the 7.1 */
             }
 
 
