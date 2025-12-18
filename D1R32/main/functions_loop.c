@@ -149,6 +149,7 @@ void apply_mode(char mode, char *curr_dir)
         // '3' is the benchmarking mode, just prints the stats
         // Start by unmounting possibly mounted SD card
         unmount_sdcard();
+        unmount_little_fs(LITTLE_FS_PARTITION_LABEL);
         // Attempt mounting the little fs file system
         if (!mount_little_fs(BENCHMARK_BASE_PATH, BENCHMARK_PARTITION_LABEL)) {
             //Blink the error code
